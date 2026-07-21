@@ -1,6 +1,11 @@
 # FundLens
 
+[![CI](https://github.com/ppcdaniel/FundLens/actions/workflows/ci.yml/badge.svg)](https://github.com/ppcdaniel/FundLens/actions/workflows/ci.yml)
+[![Live app](https://img.shields.io/badge/Streamlit-Live-ff4b4b?logo=streamlit&logoColor=white)](https://fundlens-research.streamlit.app/)
+
 FundLens is a privacy-conscious, evidence-grounded workspace for comparing two or three ETF or fund factsheets. It extracts normalized facts with page citations, keeps a human reviewer in control, calculates historical metrics with deterministic Python, checks generated claims, and exports an approved research brief.
+
+Try the hosted MVP at [fundlens-research.streamlit.app](https://fundlens-research.streamlit.app/).
 
 > FundLens provides research and decision support, not financial advice. It does not recommend a “best” fund or issue buy, sell, or suitability conclusions.
 
@@ -43,7 +48,7 @@ The container uses a read-only root filesystem and an in-memory temporary direct
 
 ## Bring-your-own-key privacy
 
-The password field hides the key on screen, but Streamlit sends it to the Python server. FundLens holds it only in that user's session memory—never in a file, cookie, database, shared cache, report, or application log. **Forget API key** clears the key and related AI state.
+The password field hides the key on screen, but Streamlit sends it to the Python server. FundLens holds it only in that user's session memory—never in a file, cookie, database, shared cache, report, or application log. **Forget API key** clears the credential and rotates sensitive browser widgets so the entire workspace is discarded.
 
 Users who do not trust a hosted operator with in-memory access should run the Docker deployment locally. See [PRIVACY.md](PRIVACY.md) and [SECURITY.md](SECURITY.md).
 
@@ -70,7 +75,7 @@ Gemma calls are replaced by deterministic fakes in CI. No real API key is requir
 
 ## Deployment
 
-Push the public repository to GitHub, then create a Streamlit Community Cloud app using branch `main` and entrypoint `app.py`. Do not configure a server-owned AI key or add a `secrets.toml` file. Community Cloud reads `uv.lock` and defaults to Python 3.12.
+The primary deployment is [fundlens-research.streamlit.app](https://fundlens-research.streamlit.app/), built from branch `main` and entrypoint `app.py`. It has no server-owned AI key or `secrets.toml`; Community Cloud installs the locked Python 3.12 environment from `uv.lock`.
 
 ## Documentation
 
