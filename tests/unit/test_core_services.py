@@ -24,6 +24,10 @@ from fundlens.models.evidence import (
     FieldStatus,
     ReviewStatus,
 )
+from fundlens.models.extraction import (
+    EXTRACTION_FIELD_DEFINITIONS,
+    FactsheetExtractionResponse,
+)
 from fundlens.models.fund import Exposure, FundFactsheet, FundSize, Holding
 from fundlens.services.brief_generator import BriefGenerator
 from fundlens.services.comparison import ComparisonService, ComparisonWarningCode
@@ -33,6 +37,8 @@ from fundlens.services.fund_extractor import FundExtractionError, FundExtractor
 from fundlens.services.gemma_client import (
     GEMMA_MODEL_NAME,
     GEMMA_REQUEST_TIMEOUT_MILLISECONDS,
+    GEMMA_RESPONSE_TEMPERATURE,
+    GEMMA_THINKING_LEVEL,
     GemmaClient,
     GemmaClientError,
 )
@@ -146,6 +152,20 @@ def _factsheet(
     )
 
 
+def _extraction_response(factsheet: FundFactsheet) -> str:
+    payload: dict[str, object] = {}
+    for field_name, evidence_field in factsheet.iter_evidence_fields():
+        serialized_value = evidence_field.model_dump(mode="json")["value"]
+        payload[field_name] = {
+            "v": serialized_value,
+            "s": evidence_field.status,
+            "p": evidence_field.page_number,
+            "q": evidence_field.supporting_text,
+            "c": evidence_field.confidence,
+        }
+    return json.dumps(payload)
+
+
 def _parsed_document(source_document: str) -> ParsedDocument:
     return ParsedDocument(
         file_name="factsheet.pdf",
@@ -180,6 +200,22 @@ def test_factsheet_rejects_partially_missing_model_output() -> None:
         FundFactsheet.model_validate({"fund_name": {}}, strict=True)
 
 
+def test_compact_extraction_contract_stays_aligned_with_domain_fields() -> None:
+    defined_field_names = tuple(field_name for field_name, _ in EXTRACTION_FIELD_DEFINITIONS)
+
+    assert tuple(FactsheetExtractionResponse.model_fields) == FundFactsheet.EVIDENCE_FIELD_NAMES
+    assert defined_field_names == FundFactsheet.EVIDENCE_FIELD_NAMES
+
+
+def test_compact_extraction_contract_rejects_provider_controlled_metadata() -> None:
+    source_document = "a" * 64
+    payload = json.loads(_extraction_response(_factsheet(source_document)))
+    payload["fund_name"]["source_document"] = "provider-controlled"
+
+    with pytest.raises(ValidationError, match="Extra inputs are not permitted"):
+        FactsheetExtractionResponse.model_validate(payload, strict=True)
+
+
 def test_human_can_correct_a_previously_missing_field_without_invented_page_evidence() -> None:
     missing_field = EvidenceField[str](
         value=None,
@@ -201,7 +237,7 @@ def test_human_can_correct_a_previously_missing_field_without_invented_page_evid
 def test_extractor_permits_exactly_one_constrained_repair() -> None:
     source_document = "a" * 64
     parsed_document = _parsed_document(source_document)
-    valid_response = _factsheet(source_document).model_dump_json()
+    valid_response = _extraction_response(_factsheet(source_document))
     model_client = _FakeModelClient("{}", valid_response)
     parser = _FakeDocumentParser(parsed_document)
     extractor = FundExtractor(model_client=model_client, document_parser=parser)
@@ -209,16 +245,36 @@ def test_extractor_permits_exactly_one_constrained_repair() -> None:
     result = extractor.extract_pdf(b"%PDF-fake", file_name="factsheet.pdf")
 
     assert result.fund_name.value == "Fund A"
+    assert result.fund_name.source_document == source_document
+    assert result.fund_name.review_status is ReviewStatus.PENDING
     assert parser.calls == 1
     assert len(model_client.prompts) == 2
     assert "only repair attempt" in model_client.prompts[1]
 
 
+def test_extraction_prompt_stays_compact_and_omits_trusted_metadata() -> None:
+    source_document = "c" * 64
+    parsed_document = _parsed_document(source_document)
+    extractor = FundExtractor(
+        model_client=_FakeModelClient("{}"),
+        document_parser=_FakeDocumentParser(parsed_document),
+    )
+
+    prompt = extractor._build_extraction_prompt(parsed_document)
+
+    assert len(prompt) < 6_000
+    assert source_document not in prompt
+    assert "source_document" not in prompt
+    assert "review_status" not in prompt
+    for field_name in FundFactsheet.EVIDENCE_FIELD_NAMES:
+        assert prompt.count(f"`{field_name}`:") == 1
+
+
 def test_extractor_rejects_nonexistent_evidence_page_after_repair() -> None:
     source_document = "b" * 64
     parsed_document = _parsed_document(source_document)
-    invalid_payload = _factsheet(source_document).model_dump(mode="json")
-    invalid_payload["fund_name"]["page_number"] = 2
+    invalid_payload = json.loads(_extraction_response(_factsheet(source_document)))
+    invalid_payload["fund_name"]["p"] = 2
     invalid_response = json.dumps(invalid_payload)
     model_client = _FakeModelClient(invalid_response, invalid_response)
     extractor = FundExtractor(
@@ -438,7 +494,16 @@ def test_gemma_client_uses_prompt_constrained_json_for_gemma_compatibility() -> 
     assert sdk_client.models.request is not None
     assert sdk_client.models.request["model"] == GEMMA_MODEL_NAME
     assert sdk_client.models.request["contents"] == "Return JSON matching the embedded schema."
-    assert set(sdk_client.models.request) == {"model", "contents"}
+    generation_config = sdk_client.models.request["config"]
+    assert isinstance(generation_config, dict)
+    assert generation_config == {
+        "temperature": GEMMA_RESPONSE_TEMPERATURE,
+        "thinking_config": {
+            "thinking_level": GEMMA_THINKING_LEVEL,
+            "include_thoughts": False,
+        },
+    }
+    assert set(sdk_client.models.request) == {"model", "contents", "config"}
 
 
 def test_gemma_client_configures_a_finite_sdk_request_timeout(
@@ -559,6 +624,27 @@ def test_gemma_client_maps_timeout_without_leaking_details() -> None:
     class FailingModels:
         def generate_content(self, **kwargs: object) -> object:
             raise RequestTimeoutError("read timed out: must-not-surface")
+
+    class FailingSdkClient:
+        models = FailingModels()
+
+    client = GemmaClient("dummy-secret-key", sdk_client=FailingSdkClient())
+
+    with pytest.raises(GemmaClientError, match="request timed out") as error:
+        client.generate_json(prompt="Return JSON", response_schema={"type": "object"})
+
+    assert "must-not-surface" not in str(error.value)
+
+
+def test_gemma_client_maps_gateway_deadline_without_leaking_details() -> None:
+    class GatewayDeadlineError(RuntimeError):
+        code = 504
+        status = "DEADLINE_EXCEEDED"
+        details: ClassVar[dict[str, str]] = {"private": "must-not-surface"}
+
+    class FailingModels:
+        def generate_content(self, **kwargs: object) -> object:
+            raise GatewayDeadlineError("deadline expired: must-not-surface")
 
     class FailingSdkClient:
         models = FailingModels()

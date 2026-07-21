@@ -20,3 +20,6 @@ Reviewer-approved facts and deterministic metrics form an evidence registry. Gen
 
 The interface uses high whitespace, restrained cards, strong typographic hierarchy, deep-ink text, emerald state accents, and soft-lilac supporting surfaces. This keeps dense financial evidence legible without imitating a trading terminal.
 
+## 2026-07-21 — Compact provider extraction contract
+
+The first extraction prompt repeated the full domain schema and trusted metadata for every field, causing Gemma 4 31B requests to exceed the bounded request deadline. Extraction prompt v2 keeps all 21 typed field values and evidence attributes but omits provider-controlled source identity and review state. FundLens injects the parser-derived document hash and pending review state locally, then validates the unchanged full domain model and exact page citations. This reduces provider work without weakening evidence traceability or the single-repair rule.

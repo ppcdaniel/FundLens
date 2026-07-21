@@ -9,7 +9,10 @@ from fundlens.config import MODEL_ID
 
 GEMMA_MODEL_NAME = MODEL_ID
 GEMMA_REQUEST_TIMEOUT_MILLISECONDS = 90_000
+GEMMA_THINKING_LEVEL = "MINIMAL"
+GEMMA_RESPONSE_TEMPERATURE = 0.0
 AUTHENTICATION_STATUS_CODES = frozenset({401, 403})
+REQUEST_TIMEOUT_STATUS_CODES = frozenset({408, 504})
 TRANSIENT_SERVER_STATUS_CODE_MINIMUM = 500
 INVALID_API_KEY_SIGNALS = (
     "api key not valid",
@@ -31,6 +34,8 @@ REGION_OR_BILLING_SIGNALS = (
 )
 TIMEOUT_SIGNALS = (
     "connect timeout",
+    "deadline expired",
+    "deadline_exceeded",
     "deadline exceeded",
     "read timeout",
     "timed out",
@@ -132,6 +137,14 @@ class GemmaClient:
             response = self._sdk_client.models.generate_content(
                 model=GEMMA_MODEL_NAME,
                 contents=prompt,
+                config={
+                    "temperature": GEMMA_RESPONSE_TEMPERATURE,
+                    "thinking_config": {
+                        # Extraction needs faithful transcription, not costly deep reasoning.
+                        "thinking_level": GEMMA_THINKING_LEVEL,
+                        "include_thoughts": False,
+                    },
+                },
             )
             response_text = response.text
         except Exception as error:
@@ -192,6 +205,10 @@ class GemmaClient:
         if status_code == 400:
             return GemmaClientError(
                 "The Gemma service rejected the request. Verify model access and request limits."
+            )
+        if status_code in REQUEST_TIMEOUT_STATUS_CODES:
+            return GemmaClientError(
+                "The Gemma request timed out. Retry with fewer or shorter factsheets."
             )
         if status_code is not None and status_code >= TRANSIENT_SERVER_STATUS_CODE_MINIMUM:
             return GemmaClientError(
