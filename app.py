@@ -22,7 +22,10 @@ from fundlens.services.evidence_checker import EvidenceChecker
 from fundlens.services.export_service import ExportService
 from fundlens.services.financial_analytics import FinancialAnalyticsService
 from fundlens.services.fund_extractor import FundExtractor
-from fundlens.services.gemma_client import GemmaClient
+from fundlens.services.gemma_client import (
+    GEMMA_REQUEST_TIMEOUT_MILLISECONDS,
+    GemmaClient,
+)
 from fundlens.services.pdf_parser import PyMuPDFDocumentParser
 from fundlens.ui.analytics import (
     ANALYTICS_STATE_KEY,
@@ -193,7 +196,8 @@ def _extract_factsheets(
             status.update(
                 label=(
                     f"Extracting factsheet {index}/{len(documents)} · "
-                    "each AI request has a fixed deadline…"
+                    "first pass and optional repair each have a "
+                    f"{GEMMA_REQUEST_TIMEOUT_MILLISECONDS // 1_000}-second deadline…"
                 )
             )
             st.write(f"Document {index}/{len(documents)} · {document.filename}")
