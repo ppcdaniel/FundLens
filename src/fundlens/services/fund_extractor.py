@@ -17,6 +17,7 @@ from fundlens.models.extraction import (
 from fundlens.models.fund import FundFactsheet
 from fundlens.services.gemma_client import LanguageModelClient
 from fundlens.services.pdf_parser import DocumentParser, ParsedDocument
+from fundlens.services.review_policy import apply_automatic_approvals
 
 PROMPT_PATH = Path(__file__).resolve().parents[1] / "prompts" / "extraction_v2.md"
 MAXIMUM_REPAIR_RESPONSE_CHARACTERS = 24_000
@@ -182,7 +183,7 @@ class FundExtractor:
             source_document=parsed_document.source_document
         )
         self._validate_evidence(factsheet, parsed_document)
-        return factsheet
+        return apply_automatic_approvals((factsheet,)).factsheets[0]
 
     @staticmethod
     def _validate_evidence(

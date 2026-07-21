@@ -27,6 +27,7 @@ from fundlens.services.gemma_client import (
     GemmaClient,
 )
 from fundlens.services.pdf_parser import PyMuPDFDocumentParser
+from fundlens.services.review_policy import apply_automatic_approvals
 from fundlens.ui.analytics import (
     ANALYTICS_STATE_KEY,
     CORRELATIONS_STATE_KEY,
@@ -42,7 +43,11 @@ from fundlens.ui.brief import (
     render_client_requirements_form,
 )
 from fundlens.ui.comparison import render_comparison
-from fundlens.ui.evidence_review import render_evidence_review
+from fundlens.ui.evidence_review import (
+    BULK_DECISION_REQUEST_STATE_KEY,
+    PDF_PAGE_CACHE_STATE_KEY,
+    render_evidence_review,
+)
 from fundlens.ui.styles import (
     callout,
     inject_global_styles,
@@ -62,6 +67,7 @@ PDF_UPLOADER_WIDGET_KEY_PREFIX: Final[str] = "fundlens.pdf_uploader"
 DOCUMENTS_STATE_KEY: Final[str] = "fundlens.documents"
 FACTSHEETS_STATE_KEY: Final[str] = "fundlens.factsheets"
 WORKFLOW_VIEW_STATE_KEY: Final[str] = "fundlens.workflow_view"
+REVIEW_NOTICE_STATE_KEY: Final[str] = "fundlens.review_notice"
 
 WORKFLOW_VIEWS: Final[tuple[str, ...]] = (
     "Sources",
@@ -73,6 +79,8 @@ WORKFLOW_VIEWS: Final[tuple[str, ...]] = (
 
 DOCUMENT_DEPENDENT_STATE_KEYS: Final[tuple[str, ...]] = (
     FACTSHEETS_STATE_KEY,
+    PDF_PAGE_CACHE_STATE_KEY,
+    BULK_DECISION_REQUEST_STATE_KEY,
     ANALYTICS_STATE_KEY,
     CORRELATIONS_STATE_KEY,
     PRICE_CONTEXT_STATE_KEY,
@@ -366,16 +374,34 @@ def _render_sources_view(api_key: str) -> None:
 def _render_review_view() -> None:
     """Orchestrate field-level evidence decisions."""
     factsheets = _session_factsheets()
+    automatic_review_result = apply_automatic_approvals(factsheets)
+    if automatic_review_result.updated_fields:
+        factsheets = automatic_review_result.factsheets
+        st.session_state[FACTSHEETS_STATE_KEY] = factsheets
+        _clear_state_keys(REVIEW_DEPENDENT_STATE_KEYS)
+
+    review_notice = st.session_state.pop(REVIEW_NOTICE_STATE_KEY, None)
+    if isinstance(review_notice, str) and review_notice:
+        st.toast(review_notice, icon="✅")
+
     review_workspace = render_evidence_review(factsheets, _session_documents())
     if review_workspace.factsheets and review_workspace.factsheets != factsheets:
         st.session_state[FACTSHEETS_STATE_KEY] = review_workspace.factsheets
         _clear_state_keys(REVIEW_DEPENDENT_STATE_KEYS)
+        if review_workspace.action_message:
+            st.session_state[REVIEW_NOTICE_STATE_KEY] = review_workspace.action_message
+        st.rerun()
 
     if review_workspace.total_fields and not review_workspace.has_pending_fields:
         st.success("Every extracted field has a recorded review decision.", icon="✅")
     if len(review_workspace.factsheets) >= 2:
+        comparison_button_label = (
+            "Preview comparison · pending evidence excluded"
+            if review_workspace.has_pending_fields
+            else "Open side-by-side comparison"
+        )
         st.button(
-            "Open side-by-side comparison",
+            comparison_button_label,
             on_click=_set_workflow_view,
             args=("Compare",),
             width="stretch",
@@ -483,9 +509,7 @@ def main() -> None:
         )
 
     if entered_api_key != session_api_key:
-        _clear_state_keys(
-            (FACTSHEETS_STATE_KEY, GENERATED_BRIEF_STATE_KEY, CHECKED_BRIEF_STATE_KEY)
-        )
+        _clear_state_keys(DOCUMENT_DEPENDENT_STATE_KEYS)
         st.session_state[API_KEY_STATE_KEY] = entered_api_key
         session_api_key = entered_api_key
 

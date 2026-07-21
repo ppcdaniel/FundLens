@@ -247,7 +247,7 @@ def test_extractor_permits_exactly_one_constrained_repair() -> None:
 
     assert result.fund_name.value == "Fund A"
     assert result.fund_name.source_document == source_document
-    assert result.fund_name.review_status is ReviewStatus.PENDING
+    assert result.fund_name.review_status is ReviewStatus.AUTO_APPROVED
     assert parser.calls == 1
     assert len(model_client.prompts) == 2
     assert "only repair attempt" in model_client.prompts[1]

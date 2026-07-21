@@ -3,8 +3,11 @@
 from __future__ import annotations
 
 from enum import StrEnum
+from typing import Final
 
 from pydantic import BaseModel, ConfigDict, Field, JsonValue, model_validator
+
+AUTOMATIC_APPROVAL_CONFIDENCE_THRESHOLD: Final[float] = 0.90
 
 
 class StrictModel(BaseModel):
@@ -28,9 +31,10 @@ class FieldStatus(StrEnum):
 
 
 class ReviewStatus(StrEnum):
-    """Human-review state for extracted evidence."""
+    """Review-workflow state for extracted evidence."""
 
     PENDING = "pending"
+    AUTO_APPROVED = "auto_approved"
     APPROVED = "approved"
     CORRECTED = "corrected"
     REJECTED = "rejected"
@@ -65,6 +69,11 @@ class EvidenceField[EvidenceValueT](StrictModel):
 
         if self.review_status is ReviewStatus.CORRECTED and self.value is None:
             raise ValueError("A corrected field must have a value.")
+        if self.review_status is ReviewStatus.AUTO_APPROVED and (
+            self.status is not FieldStatus.DISCLOSED
+            or self.confidence <= AUTOMATIC_APPROVAL_CONFIDENCE_THRESHOLD
+        ):
+            raise ValueError("An auto-approved field must be disclosed with confidence above 0.90.")
         return self
 
     @property
@@ -72,6 +81,7 @@ class EvidenceField[EvidenceValueT](StrictModel):
         """Return whether the field is suitable for factual downstream use."""
 
         return self.status is FieldStatus.DISCLOSED and self.review_status in {
+            ReviewStatus.AUTO_APPROVED,
             ReviewStatus.APPROVED,
             ReviewStatus.CORRECTED,
         }
@@ -108,11 +118,34 @@ class EvidenceRecord(StrictModel):
     confidence: float = Field(ge=0.0, le=1.0)
     review_status: ReviewStatus
 
+    @model_validator(mode="after")
+    def validate_automatic_approval_invariants(self) -> EvidenceRecord:
+        """Reject restored evidence that bypasses the automatic-review policy."""
+
+        if self.review_status is not ReviewStatus.AUTO_APPROVED:
+            return self
+        if (
+            self.status is not FieldStatus.DISCLOSED
+            or self.value is None
+            or self.page_number is None
+            or not self.supporting_text
+            or not self.supporting_text.strip()
+            or self.confidence <= AUTOMATIC_APPROVAL_CONFIDENCE_THRESHOLD
+        ):
+            raise ValueError(
+                "Auto-approved evidence must be disclosed, cited, and above 0.90 confidence."
+            )
+        return self
+
     @property
     def is_reviewed(self) -> bool:
-        """Return whether a human accepted or corrected this extraction state."""
+        """Return whether the review state accepts this extracted evidence."""
 
-        return self.review_status in {ReviewStatus.APPROVED, ReviewStatus.CORRECTED}
+        return self.review_status in {
+            ReviewStatus.AUTO_APPROVED,
+            ReviewStatus.APPROVED,
+            ReviewStatus.CORRECTED,
+        }
 
 
 class ClaimClassification(StrEnum):
