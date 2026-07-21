@@ -22,6 +22,7 @@ PROMPT_PATH = Path(__file__).resolve().parents[1] / "prompts" / "extraction_v2.m
 MAXIMUM_REPAIR_RESPONSE_CHARACTERS = 24_000
 MAXIMUM_VALIDATION_MESSAGE_CHARACTERS = 2_000
 MAXIMUM_VALIDATION_ISSUES = 20
+MAXIMUM_SURFACED_VALIDATION_SUMMARY_CHARACTERS = 500
 
 
 class FundExtractionError(RuntimeError):
@@ -87,9 +88,13 @@ class FundExtractor:
         )
         try:
             return self._parse_and_validate(repaired_response, parsed_document)
-        except (ValidationError, ValueError, json.JSONDecodeError):
+        except (ValidationError, ValueError, json.JSONDecodeError) as repaired_error:
+            validation_summary = self._safe_validation_summary(repaired_error)[
+                :MAXIMUM_SURFACED_VALIDATION_SUMMARY_CHARACTERS
+            ]
             raise FundExtractionError(
-                "The factsheet extraction remained invalid after one constrained repair attempt."
+                "The factsheet extraction remained invalid after one constrained repair attempt. "
+                f"Safe validation summary: {validation_summary}."
             ) from None
 
     def _build_extraction_prompt(self, parsed_document: ParsedDocument) -> str:
@@ -132,7 +137,9 @@ class FundExtractor:
             "This is the only repair attempt. Return the complete JSON object again. "
             "Correct only schema violations or evidence references. Do not introduce, infer, "
             "or estimate facts absent from the supplied pages. For absent evidence, use status "
-            "not_disclosed with null v, p, and q plus c set to zero.\n"
+            "not_disclosed with null v, p, and q plus c set to zero. Every top-level field, "
+            "including collection-valued fields, must be exactly one c/p/q/s/v envelope; only "
+            "its v may be an array.\n"
             f"Validation problem: {bounded_validation_error}\n"
             "Invalid response:\n"
             f"{bounded_response}\n"

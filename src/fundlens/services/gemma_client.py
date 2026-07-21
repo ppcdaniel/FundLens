@@ -11,6 +11,7 @@ GEMMA_MODEL_NAME = MODEL_ID
 GEMMA_REQUEST_TIMEOUT_MILLISECONDS = 90_000
 GEMMA_THINKING_LEVEL = "MINIMAL"
 GEMMA_RESPONSE_TEMPERATURE = 0.0
+GEMMA_RESPONSE_MIME_TYPE = "application/json"
 AUTHENTICATION_STATUS_CODES = frozenset({401, 403})
 REQUEST_TIMEOUT_STATUS_CODES = frozenset({408, 504})
 TRANSIENT_SERVER_STATUS_CODE_MINIMUM = 500
@@ -139,6 +140,7 @@ class GemmaClient:
                 contents=prompt,
                 config={
                     "temperature": GEMMA_RESPONSE_TEMPERATURE,
+                    "response_mime_type": GEMMA_RESPONSE_MIME_TYPE,
                     "thinking_config": {
                         # Extraction needs faithful transcription, not costly deep reasoning.
                         "thinking_level": GEMMA_THINKING_LEVEL,
