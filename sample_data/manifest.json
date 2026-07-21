@@ -1,0 +1,66 @@
+{
+  "license": "CC0-1.0",
+  "synthetic": true,
+  "funds": [
+    {
+      "ticker": "NSGE",
+      "factsheet": "nsge_factsheet.pdf",
+      "expected_extraction": "nsge_expected.json",
+      "price_data": "nsge_prices.csv"
+    },
+    {
+      "ticker": "HSDV",
+      "factsheet": "hsdv_factsheet.pdf",
+      "expected_extraction": "hsdv_expected.json",
+      "price_data": "hsdv_prices.csv"
+    },
+    {
+      "ticker": "MSDB",
+      "factsheet": "msdb_factsheet.pdf",
+      "expected_extraction": "msdb_expected.json",
+      "price_data": "msdb_prices.csv"
+    },
+    {
+      "ticker": "AEME",
+      "factsheet": "aeme_factsheet.pdf",
+      "expected_extraction": "aeme_expected.json",
+      "price_data": "aeme_prices.csv"
+    },
+    {
+      "ticker": "CESC",
+      "factsheet": "cesc_factsheet.pdf",
+      "expected_extraction": "cesc_expected.json",
+      "price_data": "cesc_prices.csv"
+    },
+    {
+      "ticker": "OUTS",
+      "factsheet": "outs_factsheet.pdf",
+      "expected_extraction": "outs_expected.json",
+      "price_data": "outs_prices.csv"
+    },
+    {
+      "ticker": "PAQG",
+      "factsheet": "paqg_factsheet.pdf",
+      "expected_extraction": "paqg_expected.json",
+      "price_data": "paqg_prices.csv"
+    },
+    {
+      "ticker": "RGIF",
+      "factsheet": "rgif_factsheet.pdf",
+      "expected_extraction": "rgif_expected.json",
+      "price_data": "rgif_prices.csv"
+    },
+    {
+      "ticker": "SMAD",
+      "factsheet": "smad_factsheet.pdf",
+      "expected_extraction": "smad_expected.json",
+      "price_data": "smad_prices.csv"
+    },
+    {
+      "ticker": "TCTB",
+      "factsheet": "tctb_factsheet.pdf",
+      "expected_extraction": "tctb_expected.json",
+      "price_data": "tctb_prices.csv"
+    }
+  ]
+}

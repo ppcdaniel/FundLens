@@ -1,0 +1,158 @@
+{
+  "document": "paqg_factsheet.pdf",
+  "fields": {
+    "fund_name": {
+      "value": "Pioneer Asia Quality Growth Fund",
+      "page_number": 1,
+      "status": "disclosed"
+    },
+    "ticker": {
+      "value": "PAQG",
+      "page_number": 1,
+      "status": "disclosed"
+    },
+    "isin": {
+      "value": "SG0SYNTH0007",
+      "page_number": 1,
+      "status": "disclosed"
+    },
+    "reporting_date": {
+      "value": "2026-05-31",
+      "page_number": 1,
+      "status": "disclosed"
+    },
+    "investment_objective": {
+      "value": "Seek capital appreciation from quality growth companies in Asia.",
+      "page_number": 1,
+      "status": "disclosed"
+    },
+    "strategy": {
+      "value": "Concentrated fundamental portfolio with a five-year investment horizon.",
+      "page_number": 1,
+      "status": "disclosed"
+    },
+    "management_style": {
+      "value": "active",
+      "page_number": 1,
+      "status": "disclosed"
+    },
+    "benchmark": {
+      "value": null,
+      "page_number": null,
+      "status": "not_disclosed"
+    },
+    "asset_class": {
+      "value": "Asia ex-Japan equity",
+      "page_number": 1,
+      "status": "disclosed"
+    },
+    "expense_ratio": {
+      "value": 1.05,
+      "page_number": 1,
+      "status": "disclosed"
+    },
+    "original_fee_label": {
+      "value": "Management fee",
+      "page_number": 1,
+      "status": "disclosed"
+    },
+    "income_treatment": {
+      "value": "accumulating",
+      "page_number": 1,
+      "status": "disclosed"
+    },
+    "domicile": {
+      "value": "Singapore",
+      "page_number": 1,
+      "status": "disclosed"
+    },
+    "base_currency": {
+      "value": "USD",
+      "page_number": 1,
+      "status": "disclosed"
+    },
+    "share_class_currency": {
+      "value": "USD",
+      "page_number": 1,
+      "status": "disclosed"
+    },
+    "fund_size": {
+      "value": {
+        "amount": 188000000.0,
+        "currency": "USD",
+        "scope": "fund",
+        "original_text": "USD 188 million"
+      },
+      "page_number": 1,
+      "status": "disclosed"
+    },
+    "top_holdings": {
+      "value": [
+        {
+          "name": "Opal Digital",
+          "weight_percent": 6.2
+        },
+        {
+          "name": "Pine Logistics",
+          "weight_percent": 5.4
+        },
+        {
+          "name": "Quartz Leisure",
+          "weight_percent": 4.9
+        }
+      ],
+      "page_number": 2,
+      "status": "disclosed"
+    },
+    "sector_exposure": {
+      "value": [
+        {
+          "name": "Technology",
+          "weight_percent": 31.0
+        },
+        {
+          "name": "Consumer discretionary",
+          "weight_percent": 20.0
+        },
+        {
+          "name": "Industrials",
+          "weight_percent": 14.0
+        }
+      ],
+      "page_number": 2,
+      "status": "disclosed"
+    },
+    "geographic_exposure": {
+      "value": [
+        {
+          "name": "India",
+          "weight_percent": 24.0
+        },
+        {
+          "name": "China",
+          "weight_percent": 21.0
+        },
+        {
+          "name": "South Korea",
+          "weight_percent": 15.0
+        }
+      ],
+      "page_number": 2,
+      "status": "disclosed"
+    },
+    "liquidity_trading_information": {
+      "value": "Weekly dealing; redemption notice may be required for large orders.",
+      "page_number": 2,
+      "status": "disclosed"
+    },
+    "disclosed_risks": {
+      "value": [
+        "Concentration risk",
+        "Emerging-market risk",
+        "Liquidity risk"
+      ],
+      "page_number": 3,
+      "status": "disclosed"
+    }
+  }
+}

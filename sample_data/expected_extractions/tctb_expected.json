@@ -1,0 +1,158 @@
+{
+  "document": "tctb_factsheet.pdf",
+  "fields": {
+    "fund_name": {
+      "value": "Tundra Climate Transition Bond ETF",
+      "page_number": 1,
+      "status": "disclosed"
+    },
+    "ticker": {
+      "value": "TCTB",
+      "page_number": 1,
+      "status": "disclosed"
+    },
+    "isin": {
+      "value": "LU0SYNTH0010",
+      "page_number": 1,
+      "status": "disclosed"
+    },
+    "reporting_date": {
+      "value": "2026-05-31",
+      "page_number": 1,
+      "status": "disclosed"
+    },
+    "investment_objective": {
+      "value": "Track investment-grade bonds from issuers aligned with climate-transition criteria.",
+      "page_number": 1,
+      "status": "disclosed"
+    },
+    "strategy": {
+      "value": "Rules-based screened sampling; annual climate eligibility review.",
+      "page_number": 1,
+      "status": "disclosed"
+    },
+    "management_style": {
+      "value": "passive",
+      "page_number": 1,
+      "status": "disclosed"
+    },
+    "benchmark": {
+      "value": "Tundra Climate Transition Bond Index",
+      "page_number": 1,
+      "status": "disclosed"
+    },
+    "asset_class": {
+      "value": "Sustainable corporate fixed income",
+      "page_number": 1,
+      "status": "disclosed"
+    },
+    "expense_ratio": {
+      "value": 0.22,
+      "page_number": 1,
+      "status": "disclosed"
+    },
+    "original_fee_label": {
+      "value": "Fund expenses",
+      "page_number": 1,
+      "status": "disclosed"
+    },
+    "income_treatment": {
+      "value": "distributing",
+      "page_number": 1,
+      "status": "disclosed"
+    },
+    "domicile": {
+      "value": "Luxembourg",
+      "page_number": 1,
+      "status": "disclosed"
+    },
+    "base_currency": {
+      "value": "EUR",
+      "page_number": 1,
+      "status": "disclosed"
+    },
+    "share_class_currency": {
+      "value": "EUR",
+      "page_number": 1,
+      "status": "disclosed"
+    },
+    "fund_size": {
+      "value": {
+        "amount": 306000000.0,
+        "currency": "EUR",
+        "scope": "fund",
+        "original_text": "EUR 306 million"
+      },
+      "page_number": 1,
+      "status": "disclosed"
+    },
+    "top_holdings": {
+      "value": [
+        {
+          "name": "Umber Rail",
+          "weight_percent": 2.8
+        },
+        {
+          "name": "Valeo Grid",
+          "weight_percent": 2.5
+        },
+        {
+          "name": "Willow Housing",
+          "weight_percent": 2.3
+        }
+      ],
+      "page_number": 2,
+      "status": "disclosed"
+    },
+    "sector_exposure": {
+      "value": [
+        {
+          "name": "Financial credit",
+          "weight_percent": 35.0
+        },
+        {
+          "name": "Industrial credit",
+          "weight_percent": 33.0
+        },
+        {
+          "name": "Utilities",
+          "weight_percent": 24.0
+        }
+      ],
+      "page_number": 2,
+      "status": "disclosed"
+    },
+    "geographic_exposure": {
+      "value": [
+        {
+          "name": "Europe",
+          "weight_percent": 67.0
+        },
+        {
+          "name": "North America",
+          "weight_percent": 21.0
+        },
+        {
+          "name": "Asia Pacific",
+          "weight_percent": 8.0
+        }
+      ],
+      "page_number": 2,
+      "status": "disclosed"
+    },
+    "liquidity_trading_information": {
+      "value": "Exchange traded; underlying bonds may trade less frequently than fund shares.",
+      "page_number": 2,
+      "status": "disclosed"
+    },
+    "disclosed_risks": {
+      "value": [
+        "Credit risk",
+        "Green methodology risk",
+        "Liquidity mismatch risk"
+      ],
+      "page_number": 3,
+      "status": "disclosed"
+    }
+  }
+}

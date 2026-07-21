@@ -1,0 +1,66 @@
+[project]
+name = "fundlens"
+version = "0.1.0"
+description = "Evidence-grounded ETF and fund comparison research workspace"
+readme = "README.md"
+requires-python = ">=3.12,<3.13"
+license = { text = "MIT" }
+authors = [{ name = "FundLens contributors" }]
+dependencies = [
+    "google-genai>=1.35.0,<2",
+    "numpy>=2.1.0,<3",
+    "pandas>=2.2.0,<3",
+    "plotly>=6.0.0,<7",
+    "pydantic>=2.10.0,<3",
+    "pymupdf>=1.25.0,<2",
+    "reportlab>=4.2.0,<5",
+    "streamlit>=1.47.0,<2",
+]
+
+[dependency-groups]
+dev = [
+    "mypy>=1.15.0,<2",
+    "pandas-stubs>=2.2.0,<3",
+    "pytest>=8.3.0,<10",
+    "pytest-cov>=6.0.0,<8",
+    "ruff>=0.11.0,<1",
+    "types-reportlab>=4.4.0,<5",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/fundlens"]
+
+[tool.pytest.ini_options]
+addopts = "--strict-config --strict-markers --disable-warnings --cov=src/fundlens --cov-report=term-missing"
+testpaths = ["tests"]
+
+[tool.ruff]
+target-version = "py312"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "SIM", "RUF"]
+ignore = ["E501"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**/*.py" = ["S101"]
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+packages = ["fundlens"]
+warn_unused_configs = true
+plugins = ["pydantic.mypy"]
+
+[tool.coverage.run]
+branch = true
+source = ["src/fundlens"]
+
+[tool.coverage.report]
+show_missing = true
+skip_covered = true
+

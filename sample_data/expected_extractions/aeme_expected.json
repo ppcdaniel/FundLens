@@ -1,0 +1,159 @@
+{
+  "document": "aeme_factsheet.pdf",
+  "fields": {
+    "fund_name": {
+      "value": "Atlas Emerging Markets Equity ETF",
+      "page_number": 1,
+      "status": "disclosed"
+    },
+    "ticker": {
+      "value": "AEME",
+      "page_number": 1,
+      "status": "disclosed"
+    },
+    "isin": {
+      "value": "IE0SYNTH0004",
+      "page_number": 1,
+      "status": "disclosed"
+    },
+    "reporting_date": {
+      "value": "2026-03-31",
+      "page_number": 1,
+      "status": "disclosed"
+    },
+    "investment_objective": {
+      "value": "Track broad emerging-market equity performance.",
+      "page_number": 1,
+      "status": "disclosed"
+    },
+    "strategy": {
+      "value": "Optimized physical replication; securities lending permitted.",
+      "page_number": 1,
+      "status": "disclosed"
+    },
+    "management_style": {
+      "value": "passive",
+      "page_number": 1,
+      "status": "disclosed"
+    },
+    "benchmark": {
+      "value": "Atlas Emerging Markets IMI",
+      "page_number": 1,
+      "status": "disclosed"
+    },
+    "asset_class": {
+      "value": "Emerging-markets equity",
+      "page_number": 1,
+      "status": "disclosed"
+    },
+    "expense_ratio": {
+      "value": 0.29,
+      "page_number": 1,
+      "status": "disclosed"
+    },
+    "original_fee_label": {
+      "value": "Total expense ratio",
+      "page_number": 1,
+      "status": "disclosed"
+    },
+    "income_treatment": {
+      "value": "accumulating",
+      "page_number": 1,
+      "status": "disclosed"
+    },
+    "domicile": {
+      "value": "Ireland",
+      "page_number": 1,
+      "status": "disclosed"
+    },
+    "base_currency": {
+      "value": "USD",
+      "page_number": 1,
+      "status": "disclosed"
+    },
+    "share_class_currency": {
+      "value": "USD",
+      "page_number": 1,
+      "status": "disclosed"
+    },
+    "fund_size": {
+      "value": {
+        "amount": 932000000.0,
+        "currency": "USD",
+        "scope": "fund",
+        "original_text": "USD 932 million"
+      },
+      "page_number": 1,
+      "status": "disclosed"
+    },
+    "top_holdings": {
+      "value": [
+        {
+          "name": "Ibis Semiconductor",
+          "weight_percent": 7.0
+        },
+        {
+          "name": "Jade Commerce",
+          "weight_percent": 5.8
+        },
+        {
+          "name": "Kite Financial",
+          "weight_percent": 4.6
+        }
+      ],
+      "page_number": 2,
+      "status": "disclosed"
+    },
+    "sector_exposure": {
+      "value": [
+        {
+          "name": "Technology",
+          "weight_percent": 28.0
+        },
+        {
+          "name": "Financials",
+          "weight_percent": 22.0
+        },
+        {
+          "name": "Consumer discretionary",
+          "weight_percent": 13.0
+        }
+      ],
+      "page_number": 2,
+      "status": "disclosed"
+    },
+    "geographic_exposure": {
+      "value": [
+        {
+          "name": "China",
+          "weight_percent": 25.0
+        },
+        {
+          "name": "India",
+          "weight_percent": 20.0
+        },
+        {
+          "name": "Taiwan",
+          "weight_percent": 18.0
+        }
+      ],
+      "page_number": 2,
+      "status": "disclosed"
+    },
+    "liquidity_trading_information": {
+      "value": "Exchange traded; estimated spread 0.15%; daily creation/redemption.",
+      "page_number": 2,
+      "status": "disclosed"
+    },
+    "disclosed_risks": {
+      "value": [
+        "Emerging-market risk",
+        "Currency risk",
+        "Political risk",
+        "Securities-lending risk"
+      ],
+      "page_number": 3,
+      "status": "disclosed"
+    }
+  }
+}

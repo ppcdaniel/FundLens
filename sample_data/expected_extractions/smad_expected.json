@@ -1,0 +1,154 @@
+{
+  "document": "smad_factsheet.pdf",
+  "fields": {
+    "fund_name": {
+      "value": "Solstice Multi-Asset Defensive Fund",
+      "page_number": 1,
+      "status": "disclosed"
+    },
+    "ticker": {
+      "value": "SMAD",
+      "page_number": 1,
+      "status": "disclosed"
+    },
+    "isin": {
+      "value": "GB0SYNTH0009",
+      "page_number": 1,
+      "status": "disclosed"
+    },
+    "reporting_date": {
+      "value": "2026-06-30",
+      "page_number": 1,
+      "status": "disclosed"
+    },
+    "investment_objective": {
+      "value": "Target positive returns over rolling three-year periods with lower volatility than global equities.",
+      "page_number": 1,
+      "status": "disclosed"
+    },
+    "strategy": {
+      "value": "Actively allocates across bonds, equities, cash and listed alternatives.",
+      "page_number": 1,
+      "status": "disclosed"
+    },
+    "management_style": {
+      "value": "active",
+      "page_number": 1,
+      "status": "disclosed"
+    },
+    "benchmark": {
+      "value": "SONIA + 2%",
+      "page_number": 1,
+      "status": "disclosed"
+    },
+    "asset_class": {
+      "value": "Multi-asset",
+      "page_number": 1,
+      "status": "disclosed"
+    },
+    "expense_ratio": {
+      "value": 0.62,
+      "page_number": 1,
+      "status": "disclosed"
+    },
+    "original_fee_label": {
+      "value": "Ongoing charges",
+      "page_number": 1,
+      "status": "disclosed"
+    },
+    "income_treatment": {
+      "value": "accumulating",
+      "page_number": 1,
+      "status": "disclosed"
+    },
+    "domicile": {
+      "value": "United Kingdom",
+      "page_number": 1,
+      "status": "disclosed"
+    },
+    "base_currency": {
+      "value": "GBP",
+      "page_number": 1,
+      "status": "disclosed"
+    },
+    "share_class_currency": {
+      "value": "GBP",
+      "page_number": 1,
+      "status": "disclosed"
+    },
+    "fund_size": {
+      "value": {
+        "amount": 521000000.0,
+        "currency": "GBP",
+        "scope": "fund",
+        "original_text": "GBP 521 million"
+      },
+      "page_number": 1,
+      "status": "disclosed"
+    },
+    "top_holdings": {
+      "value": [
+        {
+          "name": "Global Government Bond Basket",
+          "weight_percent": 18.0
+        },
+        {
+          "name": "Developed Equity Basket",
+          "weight_percent": 14.0
+        },
+        {
+          "name": "Cash Instruments",
+          "weight_percent": 11.0
+        }
+      ],
+      "page_number": 2,
+      "status": "disclosed"
+    },
+    "sector_exposure": {
+      "value": [
+        {
+          "name": "Fixed income",
+          "weight_percent": 55.0
+        },
+        {
+          "name": "Equity",
+          "weight_percent": 25.0
+        },
+        {
+          "name": "Alternatives",
+          "weight_percent": 10.0
+        },
+        {
+          "name": "Cash",
+          "weight_percent": 10.0
+        }
+      ],
+      "page_number": 2,
+      "status": "disclosed"
+    },
+    "geographic_exposure": {
+      "value": [
+        {
+          "name": "Global",
+          "weight_percent": 100.0
+        }
+      ],
+      "page_number": 2,
+      "status": "disclosed"
+    },
+    "liquidity_trading_information": {
+      "value": "Daily dealing; dilution adjustment may apply.",
+      "page_number": 2,
+      "status": "disclosed"
+    },
+    "disclosed_risks": {
+      "value": [
+        "Asset-allocation risk",
+        "Derivative risk",
+        "Counterparty risk"
+      ],
+      "page_number": 3,
+      "status": "disclosed"
+    }
+  }
+}

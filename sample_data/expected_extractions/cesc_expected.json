@@ -1,0 +1,158 @@
+{
+  "document": "cesc_factsheet.pdf",
+  "fields": {
+    "fund_name": {
+      "value": "Cedar Europe Small Companies Fund",
+      "page_number": 1,
+      "status": "disclosed"
+    },
+    "ticker": {
+      "value": "CESC",
+      "page_number": 1,
+      "status": "disclosed"
+    },
+    "isin": {
+      "value": "LU0SYNTH0005",
+      "page_number": 1,
+      "status": "disclosed"
+    },
+    "reporting_date": {
+      "value": "2026-06-30",
+      "page_number": 1,
+      "status": "disclosed"
+    },
+    "investment_objective": {
+      "value": "Deliver long-term growth from smaller European companies.",
+      "page_number": 1,
+      "status": "disclosed"
+    },
+    "strategy": {
+      "value": "Fundamental, bottom-up portfolio of 45-70 companies.",
+      "page_number": 1,
+      "status": "disclosed"
+    },
+    "management_style": {
+      "value": "active",
+      "page_number": 1,
+      "status": "disclosed"
+    },
+    "benchmark": {
+      "value": "Cedar Europe Small Cap Index",
+      "page_number": 1,
+      "status": "disclosed"
+    },
+    "asset_class": {
+      "value": "European small-cap equity",
+      "page_number": 1,
+      "status": "disclosed"
+    },
+    "expense_ratio": {
+      "value": 0.78,
+      "page_number": 1,
+      "status": "disclosed"
+    },
+    "original_fee_label": {
+      "value": "Ongoing charges",
+      "page_number": 1,
+      "status": "disclosed"
+    },
+    "income_treatment": {
+      "value": "accumulating",
+      "page_number": 1,
+      "status": "disclosed"
+    },
+    "domicile": {
+      "value": "Luxembourg",
+      "page_number": 1,
+      "status": "disclosed"
+    },
+    "base_currency": {
+      "value": "EUR",
+      "page_number": 1,
+      "status": "disclosed"
+    },
+    "share_class_currency": {
+      "value": "EUR",
+      "page_number": 1,
+      "status": "disclosed"
+    },
+    "fund_size": {
+      "value": {
+        "amount": 255000000.0,
+        "currency": "EUR",
+        "scope": "fund",
+        "original_text": "EUR 255 million"
+      },
+      "page_number": 1,
+      "status": "disclosed"
+    },
+    "top_holdings": {
+      "value": [
+        {
+          "name": "Lumen Software",
+          "weight_percent": 3.1
+        },
+        {
+          "name": "Mistral Components",
+          "weight_percent": 2.9
+        },
+        {
+          "name": "Nacre Medical",
+          "weight_percent": 2.7
+        }
+      ],
+      "page_number": 2,
+      "status": "disclosed"
+    },
+    "sector_exposure": {
+      "value": [
+        {
+          "name": "Industrials",
+          "weight_percent": 25.0
+        },
+        {
+          "name": "Technology",
+          "weight_percent": 19.0
+        },
+        {
+          "name": "Healthcare",
+          "weight_percent": 16.0
+        }
+      ],
+      "page_number": 2,
+      "status": "disclosed"
+    },
+    "geographic_exposure": {
+      "value": [
+        {
+          "name": "France",
+          "weight_percent": 18.0
+        },
+        {
+          "name": "Germany",
+          "weight_percent": 17.0
+        },
+        {
+          "name": "Sweden",
+          "weight_percent": 13.0
+        }
+      ],
+      "page_number": 2,
+      "status": "disclosed"
+    },
+    "liquidity_trading_information": {
+      "value": "Daily dealing; swing pricing may apply.",
+      "page_number": 2,
+      "status": "disclosed"
+    },
+    "disclosed_risks": {
+      "value": [
+        "Small-company risk",
+        "Liquidity risk",
+        "Active-management risk"
+      ],
+      "page_number": 3,
+      "status": "disclosed"
+    }
+  }
+}

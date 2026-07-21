@@ -1,0 +1,158 @@
+{
+  "document": "nsge_factsheet.pdf",
+  "fields": {
+    "fund_name": {
+      "value": "Northstar Global Equity Index Fund",
+      "page_number": 1,
+      "status": "disclosed"
+    },
+    "ticker": {
+      "value": "NSGE",
+      "page_number": 1,
+      "status": "disclosed"
+    },
+    "isin": {
+      "value": "IE0SYNTH0001",
+      "page_number": 1,
+      "status": "disclosed"
+    },
+    "reporting_date": {
+      "value": "2026-06-30",
+      "page_number": 1,
+      "status": "disclosed"
+    },
+    "investment_objective": {
+      "value": "Track developed-market large and mid-cap equities.",
+      "page_number": 1,
+      "status": "disclosed"
+    },
+    "strategy": {
+      "value": "Physical replication with representative sampling.",
+      "page_number": 1,
+      "status": "disclosed"
+    },
+    "management_style": {
+      "value": "passive",
+      "page_number": 1,
+      "status": "disclosed"
+    },
+    "benchmark": {
+      "value": "Northstar Developed Markets Index (Net)",
+      "page_number": 1,
+      "status": "disclosed"
+    },
+    "asset_class": {
+      "value": "Global equity",
+      "page_number": 1,
+      "status": "disclosed"
+    },
+    "expense_ratio": {
+      "value": 0.18,
+      "page_number": 1,
+      "status": "disclosed"
+    },
+    "original_fee_label": {
+      "value": "Total expense ratio",
+      "page_number": 1,
+      "status": "disclosed"
+    },
+    "income_treatment": {
+      "value": "accumulating",
+      "page_number": 1,
+      "status": "disclosed"
+    },
+    "domicile": {
+      "value": "Ireland",
+      "page_number": 1,
+      "status": "disclosed"
+    },
+    "base_currency": {
+      "value": "USD",
+      "page_number": 1,
+      "status": "disclosed"
+    },
+    "share_class_currency": {
+      "value": "USD",
+      "page_number": 1,
+      "status": "disclosed"
+    },
+    "fund_size": {
+      "value": {
+        "amount": 1240000000.0,
+        "currency": "USD",
+        "scope": "fund",
+        "original_text": "USD 1.24 billion"
+      },
+      "page_number": 1,
+      "status": "disclosed"
+    },
+    "top_holdings": {
+      "value": [
+        {
+          "name": "Aster Systems",
+          "weight_percent": 4.8
+        },
+        {
+          "name": "Boreal Health",
+          "weight_percent": 3.7
+        },
+        {
+          "name": "Cobalt Finance",
+          "weight_percent": 3.4
+        }
+      ],
+      "page_number": 2,
+      "status": "disclosed"
+    },
+    "sector_exposure": {
+      "value": [
+        {
+          "name": "Technology",
+          "weight_percent": 26.0
+        },
+        {
+          "name": "Financials",
+          "weight_percent": 17.0
+        },
+        {
+          "name": "Healthcare",
+          "weight_percent": 14.0
+        }
+      ],
+      "page_number": 2,
+      "status": "disclosed"
+    },
+    "geographic_exposure": {
+      "value": [
+        {
+          "name": "United States",
+          "weight_percent": 64.0
+        },
+        {
+          "name": "Japan",
+          "weight_percent": 7.0
+        },
+        {
+          "name": "United Kingdom",
+          "weight_percent": 5.0
+        }
+      ],
+      "page_number": 2,
+      "status": "disclosed"
+    },
+    "liquidity_trading_information": {
+      "value": "Exchange traded; indicative spread 0.08%; daily dealing.",
+      "page_number": 2,
+      "status": "disclosed"
+    },
+    "disclosed_risks": {
+      "value": [
+        "Market risk",
+        "Currency risk",
+        "Tracking difference risk"
+      ],
+      "page_number": 3,
+      "status": "disclosed"
+    }
+  }
+}

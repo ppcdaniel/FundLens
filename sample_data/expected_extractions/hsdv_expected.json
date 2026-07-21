@@ -1,0 +1,158 @@
+{
+  "document": "hsdv_factsheet.pdf",
+  "fields": {
+    "fund_name": {
+      "value": "Harbor Sustainable Dividend ETF",
+      "page_number": 1,
+      "status": "disclosed"
+    },
+    "ticker": {
+      "value": "HSDV",
+      "page_number": 1,
+      "status": "disclosed"
+    },
+    "isin": {
+      "value": "LU0SYNTH0002",
+      "page_number": 1,
+      "status": "disclosed"
+    },
+    "reporting_date": {
+      "value": "2026-05-31",
+      "page_number": 1,
+      "status": "disclosed"
+    },
+    "investment_objective": {
+      "value": "Seek income and long-term capital growth from dividend-paying companies.",
+      "page_number": 1,
+      "status": "disclosed"
+    },
+    "strategy": {
+      "value": "Rules-based ESG and dividend screen; quarterly rebalance.",
+      "page_number": 1,
+      "status": "disclosed"
+    },
+    "management_style": {
+      "value": "passive",
+      "page_number": 1,
+      "status": "disclosed"
+    },
+    "benchmark": {
+      "value": "Harbor Sustainable Dividend Index",
+      "page_number": 1,
+      "status": "disclosed"
+    },
+    "asset_class": {
+      "value": "Global equity income",
+      "page_number": 1,
+      "status": "disclosed"
+    },
+    "expense_ratio": {
+      "value": 0.32,
+      "page_number": 1,
+      "status": "disclosed"
+    },
+    "original_fee_label": {
+      "value": "Ongoing charges figure",
+      "page_number": 1,
+      "status": "disclosed"
+    },
+    "income_treatment": {
+      "value": "distributing",
+      "page_number": 1,
+      "status": "disclosed"
+    },
+    "domicile": {
+      "value": "Luxembourg",
+      "page_number": 1,
+      "status": "disclosed"
+    },
+    "base_currency": {
+      "value": "EUR",
+      "page_number": 1,
+      "status": "disclosed"
+    },
+    "share_class_currency": {
+      "value": "EUR",
+      "page_number": 1,
+      "status": "disclosed"
+    },
+    "fund_size": {
+      "value": {
+        "amount": 684000000.0,
+        "currency": "EUR",
+        "scope": "fund",
+        "original_text": "EUR 684 million"
+      },
+      "page_number": 1,
+      "status": "disclosed"
+    },
+    "top_holdings": {
+      "value": [
+        {
+          "name": "Delphine Utilities",
+          "weight_percent": 4.2
+        },
+        {
+          "name": "Elm Consumer",
+          "weight_percent": 3.9
+        },
+        {
+          "name": "Fjord Telecom",
+          "weight_percent": 3.5
+        }
+      ],
+      "page_number": 2,
+      "status": "disclosed"
+    },
+    "sector_exposure": {
+      "value": [
+        {
+          "name": "Utilities",
+          "weight_percent": 21.0
+        },
+        {
+          "name": "Consumer staples",
+          "weight_percent": 19.0
+        },
+        {
+          "name": "Financials",
+          "weight_percent": 16.0
+        }
+      ],
+      "page_number": 2,
+      "status": "disclosed"
+    },
+    "geographic_exposure": {
+      "value": [
+        {
+          "name": "Europe",
+          "weight_percent": 44.0
+        },
+        {
+          "name": "North America",
+          "weight_percent": 38.0
+        },
+        {
+          "name": "Asia Pacific",
+          "weight_percent": 15.0
+        }
+      ],
+      "page_number": 2,
+      "status": "disclosed"
+    },
+    "liquidity_trading_information": {
+      "value": "Exchange traded; quarterly distribution; normal market hours.",
+      "page_number": 2,
+      "status": "disclosed"
+    },
+    "disclosed_risks": {
+      "value": [
+        "Equity risk",
+        "ESG methodology risk",
+        "Dividend concentration risk"
+      ],
+      "page_number": 3,
+      "status": "disclosed"
+    }
+  }
+}

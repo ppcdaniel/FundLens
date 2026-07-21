@@ -1,0 +1,142 @@
+{
+  "document": "outs_factsheet.pdf",
+  "fields": {
+    "fund_name": {
+      "value": "Orchard US Treasury 1-3 Year ETF",
+      "page_number": 1,
+      "status": "disclosed"
+    },
+    "ticker": {
+      "value": "OUTS",
+      "page_number": 1,
+      "status": "disclosed"
+    },
+    "isin": {
+      "value": "IE0SYNTH0006",
+      "page_number": 1,
+      "status": "disclosed"
+    },
+    "reporting_date": {
+      "value": "2026-06-30",
+      "page_number": 1,
+      "status": "disclosed"
+    },
+    "investment_objective": {
+      "value": "Track US Treasury securities with one-to-three-year maturities.",
+      "page_number": 1,
+      "status": "disclosed"
+    },
+    "strategy": {
+      "value": "Full physical replication where practicable.",
+      "page_number": 1,
+      "status": "disclosed"
+    },
+    "management_style": {
+      "value": "passive",
+      "page_number": 1,
+      "status": "disclosed"
+    },
+    "benchmark": {
+      "value": "Orchard US Treasury 1-3 Year Index",
+      "page_number": 1,
+      "status": "disclosed"
+    },
+    "asset_class": {
+      "value": "Government fixed income",
+      "page_number": 1,
+      "status": "disclosed"
+    },
+    "expense_ratio": {
+      "value": 0.09,
+      "page_number": 1,
+      "status": "disclosed"
+    },
+    "original_fee_label": {
+      "value": "Total expense ratio",
+      "page_number": 1,
+      "status": "disclosed"
+    },
+    "income_treatment": {
+      "value": "distributing",
+      "page_number": 1,
+      "status": "disclosed"
+    },
+    "domicile": {
+      "value": "Ireland",
+      "page_number": 1,
+      "status": "disclosed"
+    },
+    "base_currency": {
+      "value": "USD",
+      "page_number": 1,
+      "status": "disclosed"
+    },
+    "share_class_currency": {
+      "value": "GBP",
+      "page_number": 1,
+      "status": "disclosed"
+    },
+    "fund_size": {
+      "value": {
+        "amount": 1820000000.0,
+        "currency": "USD",
+        "scope": "fund",
+        "original_text": "USD 1.82 billion"
+      },
+      "page_number": 1,
+      "status": "disclosed"
+    },
+    "top_holdings": {
+      "value": [
+        {
+          "name": "US Treasury 4.25% 2028",
+          "weight_percent": 12.4
+        },
+        {
+          "name": "US Treasury 4.00% 2027",
+          "weight_percent": 11.7
+        },
+        {
+          "name": "US Treasury 3.75% 2029",
+          "weight_percent": 10.9
+        }
+      ],
+      "page_number": 2,
+      "status": "disclosed"
+    },
+    "sector_exposure": {
+      "value": [
+        {
+          "name": "Sovereign",
+          "weight_percent": 100.0
+        }
+      ],
+      "page_number": 2,
+      "status": "disclosed"
+    },
+    "geographic_exposure": {
+      "value": [
+        {
+          "name": "United States",
+          "weight_percent": 100.0
+        }
+      ],
+      "page_number": 2,
+      "status": "disclosed"
+    },
+    "liquidity_trading_information": {
+      "value": "Exchange traded in GBP; underlying NAV calculated in USD.",
+      "page_number": 2,
+      "status": "disclosed"
+    },
+    "disclosed_risks": {
+      "value": [
+        "Interest-rate risk",
+        "Share-class currency risk",
+        "Tracking risk"
+      ],
+      "page_number": 3,
+      "status": "disclosed"
+    }
+  }
+}

@@ -1,0 +1,158 @@
+{
+  "document": "msdb_factsheet.pdf",
+  "fields": {
+    "fund_name": {
+      "value": "Meridian Short Duration Bond Fund",
+      "page_number": 1,
+      "status": "disclosed"
+    },
+    "ticker": {
+      "value": "MSDB",
+      "page_number": 1,
+      "status": "disclosed"
+    },
+    "isin": {
+      "value": "GB0SYNTH0003",
+      "page_number": 1,
+      "status": "disclosed"
+    },
+    "reporting_date": {
+      "value": "2026-06-30",
+      "page_number": 1,
+      "status": "disclosed"
+    },
+    "investment_objective": {
+      "value": "Preserve capital while generating income from short-duration bonds.",
+      "page_number": 1,
+      "status": "disclosed"
+    },
+    "strategy": {
+      "value": "Actively selects investment-grade sovereign and corporate debt.",
+      "page_number": 1,
+      "status": "disclosed"
+    },
+    "management_style": {
+      "value": "active",
+      "page_number": 1,
+      "status": "disclosed"
+    },
+    "benchmark": {
+      "value": "Three-month Treasury Bill Index",
+      "page_number": 1,
+      "status": "disclosed"
+    },
+    "asset_class": {
+      "value": "Short-duration fixed income",
+      "page_number": 1,
+      "status": "disclosed"
+    },
+    "expense_ratio": {
+      "value": 0.24,
+      "page_number": 1,
+      "status": "disclosed"
+    },
+    "original_fee_label": {
+      "value": "Annual management charge",
+      "page_number": 1,
+      "status": "disclosed"
+    },
+    "income_treatment": {
+      "value": "distributing",
+      "page_number": 1,
+      "status": "disclosed"
+    },
+    "domicile": {
+      "value": "United Kingdom",
+      "page_number": 1,
+      "status": "disclosed"
+    },
+    "base_currency": {
+      "value": "GBP",
+      "page_number": 1,
+      "status": "disclosed"
+    },
+    "share_class_currency": {
+      "value": "GBP",
+      "page_number": 1,
+      "status": "disclosed"
+    },
+    "fund_size": {
+      "value": {
+        "amount": 410000000.0,
+        "currency": "GBP",
+        "scope": "fund",
+        "original_text": "GBP 410 million"
+      },
+      "page_number": 1,
+      "status": "disclosed"
+    },
+    "top_holdings": {
+      "value": [
+        {
+          "name": "UK Treasury 2028",
+          "weight_percent": 8.1
+        },
+        {
+          "name": "Granite Bank 2027",
+          "weight_percent": 3.8
+        },
+        {
+          "name": "Helios Energy 2029",
+          "weight_percent": 3.2
+        }
+      ],
+      "page_number": 2,
+      "status": "disclosed"
+    },
+    "sector_exposure": {
+      "value": [
+        {
+          "name": "Sovereign",
+          "weight_percent": 48.0
+        },
+        {
+          "name": "Financial credit",
+          "weight_percent": 23.0
+        },
+        {
+          "name": "Industrial credit",
+          "weight_percent": 18.0
+        }
+      ],
+      "page_number": 2,
+      "status": "disclosed"
+    },
+    "geographic_exposure": {
+      "value": [
+        {
+          "name": "United Kingdom",
+          "weight_percent": 62.0
+        },
+        {
+          "name": "United States",
+          "weight_percent": 16.0
+        },
+        {
+          "name": "Europe",
+          "weight_percent": 14.0
+        }
+      ],
+      "page_number": 2,
+      "status": "disclosed"
+    },
+    "liquidity_trading_information": {
+      "value": "Daily dealing before 12:00 London time; not exchange traded.",
+      "page_number": 2,
+      "status": "disclosed"
+    },
+    "disclosed_risks": {
+      "value": [
+        "Interest-rate risk",
+        "Credit risk",
+        "Liquidity risk"
+      ],
+      "page_number": 3,
+      "status": "disclosed"
+    }
+  }
+}
