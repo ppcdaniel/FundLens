@@ -13,6 +13,13 @@ keys:
 `v` is value, `s` is status, `p` is page number, `q` is supporting quote, and `c` is
 confidence.
 
+Collection rule: `top_holdings`, `sector_exposure`, `geographic_exposure`, and
+`disclosed_risks` must each still be one evidence-envelope object. Only that object's
+`v` is an array. Never return a top-level array of per-item evidence envelopes. For
+example, the required holdings shape is
+`"top_holdings":{"v":[{"name":STRING,"weight_percent":NUMBER_OR_NULL}],
+"s":STATUS,"p":PAGE_OR_NULL,"q":QUOTE_OR_NULL,"c":NUMBER}`.
+
 Rules:
 
 - Use only text from the supplied document pages. Never infer, estimate, calculate, or

@@ -37,6 +37,7 @@ from fundlens.services.fund_extractor import FundExtractionError, FundExtractor
 from fundlens.services.gemma_client import (
     GEMMA_MODEL_NAME,
     GEMMA_REQUEST_TIMEOUT_MILLISECONDS,
+    GEMMA_RESPONSE_MIME_TYPE,
     GEMMA_RESPONSE_TEMPERATURE,
     GEMMA_THINKING_LEVEL,
     GemmaClient,
@@ -282,10 +283,31 @@ def test_extractor_rejects_nonexistent_evidence_page_after_repair() -> None:
         document_parser=_FakeDocumentParser(parsed_document),
     )
 
-    with pytest.raises(FundExtractionError):
+    with pytest.raises(
+        FundExtractionError,
+        match="Safe validation summary: Field fund_name references nonexistent page 2",
+    ):
         extractor.extract_document(parsed_document)
 
     assert len(model_client.prompts) == 2
+
+
+def test_extractor_surfaces_json_failure_category_without_invalid_content() -> None:
+    parsed_document = _parsed_document("d" * 64)
+    invalid_content = "not-json-must-not-surface"
+    extractor = FundExtractor(
+        model_client=_FakeModelClient(invalid_content, invalid_content),
+        document_parser=_FakeDocumentParser(parsed_document),
+    )
+
+    with pytest.raises(
+        FundExtractionError,
+        match="Safe validation summary: response: json_invalid",
+    ) as error:
+        extractor.extract_document(parsed_document)
+
+    assert "must-not-surface" not in str(error.value)
+    assert "one constrained repair attempt" in str(error.value)
 
 
 def test_comparison_emits_material_comparability_warnings() -> None:
@@ -498,6 +520,7 @@ def test_gemma_client_uses_prompt_constrained_json_for_gemma_compatibility() -> 
     assert isinstance(generation_config, dict)
     assert generation_config == {
         "temperature": GEMMA_RESPONSE_TEMPERATURE,
+        "response_mime_type": GEMMA_RESPONSE_MIME_TYPE,
         "thinking_config": {
             "thinking_level": GEMMA_THINKING_LEVEL,
             "include_thoughts": False,
