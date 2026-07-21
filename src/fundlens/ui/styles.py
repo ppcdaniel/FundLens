@@ -20,18 +20,31 @@ def inject_global_styles() -> None:
         """
         <style>
         :root {
-          --fl-ink: #10221d;
-          --fl-muted: #63706b;
-          --fl-emerald: #087855;
-          --fl-emerald-dark: #055c41;
-          --fl-mint: #dcefe5;
-          --fl-lilac: #d9cff0;
-          --fl-lilac-soft: #f0ebfa;
-          --fl-paper: #ffffff;
-          --fl-canvas: #f5f7f2;
-          --fl-line: #dfe5df;
-          --fl-warning: #a56012;
-          --fl-danger: #a33a3a;
+          --fl-ink: hsl(162 36% 10%);
+          --fl-muted: hsl(155 7% 41%);
+          --fl-emerald: hsl(161 88% 25%);
+          --fl-emerald-dark: hsl(161 89% 19%);
+          --fl-emerald-soft: hsl(150 40% 93%);
+          --fl-mint: hsl(148 38% 90%);
+          --fl-lilac: hsl(259 43% 88%);
+          --fl-lilac-soft: hsl(260 47% 96%);
+          --fl-paper: hsl(0 0% 100%);
+          --fl-canvas: hsl(90 24% 96%);
+          --fl-line: hsl(140 10% 88%);
+          --fl-warning: hsl(35 79% 36%);
+          --fl-warning-soft: hsl(39 100% 95%);
+          --fl-danger: hsl(0 47% 43%);
+          --fl-danger-soft: hsl(0 100% 97%);
+          --fl-focus: hsl(261 58% 52%);
+          --fl-space-1: .25rem;
+          --fl-space-2: .5rem;
+          --fl-space-3: .75rem;
+          --fl-space-4: 1rem;
+          --fl-space-5: 1.5rem;
+          --fl-space-6: 2rem;
+          --fl-space-7: 3rem;
+          --fl-shadow-low: 0 1px 2px hsl(160 25% 18% / .06), 0 6px 18px hsl(160 25% 18% / .05);
+          --fl-shadow-raised: 0 2px 4px hsl(160 25% 18% / .06), 0 18px 46px hsl(160 25% 18% / .08);
           --fl-body-font: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
           --fl-display-font: ui-rounded, "Segoe UI", ui-sans-serif, sans-serif;
         }
@@ -50,7 +63,7 @@ def inject_global_styles() -> None:
         [data-testid="stAppViewContainer"] > .main { overflow: visible; }
         .block-container {
           max-width: 1320px;
-          padding-top: 1.7rem;
+          padding-top: 2.25rem;
           padding-bottom: 5rem;
         }
 
@@ -59,9 +72,10 @@ def inject_global_styles() -> None:
           color: var(--fl-ink) !important;
           letter-spacing: -0.035em;
         }
-        h1 { font-size: clamp(2.35rem, 5vw, 4.5rem) !important; line-height: 1.02 !important; }
-        h2 { font-size: clamp(1.55rem, 2.4vw, 2.15rem) !important; }
-        h3 { font-size: 1.1rem !important; letter-spacing: -0.02em; }
+        h1 { font-size: clamp(2.35rem, 5vw, 4.25rem) !important; line-height: 1.02 !important; }
+        h2 { font-size: clamp(1.55rem, 2.4vw, 2.15rem) !important; line-height: 1.12 !important; }
+        h3 { font-size: 1.15rem !important; line-height: 1.25 !important; letter-spacing: -0.02em; }
+        h4 { line-height: 1.3 !important; }
         p, label, [data-testid="stMarkdownContainer"] { color: var(--fl-ink); }
 
         .fl-topbar {
@@ -90,7 +104,7 @@ def inject_global_styles() -> None:
           align-items: center;
           gap: .48rem;
           padding: .48rem .72rem;
-          border: 1px solid var(--fl-line);
+          box-shadow: inset 0 0 0 1px var(--fl-line);
           border-radius: 999px;
           background: rgba(255,255,255,.72);
           color: var(--fl-muted);
@@ -104,10 +118,9 @@ def inject_global_styles() -> None:
           overflow: hidden;
           padding: clamp(1.7rem, 4vw, 3.1rem);
           margin: .6rem 0 1.35rem;
-          border: 1px solid rgba(16,34,29,.12);
           border-radius: 1.65rem;
           background: rgba(255,255,255,.82);
-          box-shadow: 0 22px 65px rgba(34,58,49,.08);
+          box-shadow: var(--fl-shadow-raised), inset 0 0 0 1px rgba(16,34,29,.08);
         }
         .fl-hero::after {
           content: "";
@@ -143,6 +156,35 @@ def inject_global_styles() -> None:
         .fl-section-head h2 { margin: 0; }
         .fl-section-kicker { color: var(--fl-emerald); font-size: .71rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }
         .fl-section-copy { color: var(--fl-muted); max-width: 630px; font-size: .91rem; margin: .35rem 0 0; }
+
+        div[role="radiogroup"][aria-label="Workflow"] {
+          display: grid;
+          grid-template-columns: repeat(5, minmax(0, 1fr));
+          gap: .3rem;
+          padding: .35rem;
+          border-radius: 1rem;
+          background: rgba(255,255,255,.72);
+          box-shadow: inset 0 0 0 1px var(--fl-line);
+        }
+        div[role="radiogroup"][aria-label="Workflow"] label {
+          min-height: 2.55rem;
+          justify-content: center;
+          padding: .5rem .7rem;
+          border-radius: .72rem;
+          transition: background .12s ease, color .12s ease, box-shadow .12s ease;
+        }
+        div[role="radiogroup"][aria-label="Workflow"] label:has(input:checked) {
+          background: var(--fl-ink);
+          box-shadow: var(--fl-shadow-low);
+        }
+        div[role="radiogroup"][aria-label="Workflow"] label:has(input:checked) p {
+          color: white !important;
+          font-weight: 650;
+        }
+        div[role="radiogroup"][aria-label="Workflow"] label:focus-within {
+          outline: 3px solid hsl(261 58% 52% / .35);
+          outline-offset: 2px;
+        }
 
         .fl-card, [data-testid="stForm"] {
           border: 1px solid var(--fl-line);
@@ -181,6 +223,14 @@ def inject_global_styles() -> None:
           font-weight: 650;
           line-height: 1;
         }
+        .fl-badge__dot {
+          width: .45rem;
+          height: .45rem;
+          margin-right: .38rem;
+          border-radius: 50%;
+          background: currentColor;
+          box-shadow: 0 0 0 2px rgba(255,255,255,.66);
+        }
         .fl-badge--green { background: var(--fl-mint); color: #075e43; }
         .fl-badge--amber { background: #faead3; color: #8b5111; }
         .fl-badge--red { background: #f7dddd; color: #903333; }
@@ -197,6 +247,114 @@ def inject_global_styles() -> None:
         }
         .fl-callout--warning { border-color: #e5a34e; background: #fff5e7; color: #724814; }
         .fl-callout--danger { border-color: #c45a5a; background: #fff0f0; color: #773131; }
+
+        .fl-review-stats {
+          display: grid;
+          grid-template-columns: repeat(4, minmax(0, 1fr));
+          gap: var(--fl-space-3);
+          margin: var(--fl-space-4) 0 var(--fl-space-5);
+        }
+        .fl-review-stat {
+          min-height: 6.2rem;
+          padding: var(--fl-space-4);
+          border-radius: 1rem;
+          background: rgba(255,255,255,.84);
+          box-shadow: var(--fl-shadow-low), inset 0 0 0 1px hsl(140 10% 88% / .72);
+        }
+        .fl-review-stat span {
+          display: flex;
+          align-items: center;
+          gap: .45rem;
+          color: var(--fl-muted);
+          font-size: .76rem;
+          font-weight: 650;
+          letter-spacing: .02em;
+        }
+        .fl-review-stat strong {
+          display: block;
+          margin-top: .65rem;
+          color: var(--fl-ink);
+          font: 700 1.65rem/1 var(--fl-display-font);
+          letter-spacing: -.035em;
+        }
+        .fl-review-stat--pending {
+          background: var(--fl-warning-soft);
+          box-shadow: var(--fl-shadow-low), inset 0 0 0 1px hsl(39 76% 77%);
+        }
+        .fl-review-stat--pending i {
+          width: .55rem;
+          height: .55rem;
+          border-radius: 50%;
+          background: hsl(42 94% 50%);
+          box-shadow: 0 0 0 2px hsl(42 94% 40% / .18);
+        }
+
+        .fl-evidence-value,
+        .fl-value-list,
+        .fl-evidence-list {
+          margin: .65rem 0 1rem;
+          border-radius: 1rem;
+          background: var(--fl-paper);
+          box-shadow: var(--fl-shadow-low), inset 0 0 0 1px hsl(140 10% 88% / .75);
+        }
+        .fl-evidence-value {
+          padding: 1rem 1.05rem;
+          font-size: 1rem;
+          font-weight: 600;
+          line-height: 1.55;
+          overflow-wrap: anywhere;
+        }
+        .fl-evidence-value--empty { color: var(--fl-muted); font-style: italic; }
+        .fl-value-list { overflow: hidden; }
+        .fl-value-row {
+          display: grid;
+          grid-template-columns: minmax(7.5rem, .7fr) minmax(0, 1.3fr);
+          gap: var(--fl-space-4);
+          padding: .78rem 1rem;
+        }
+        .fl-value-row + .fl-value-row { border-top: 1px solid hsl(140 10% 91%); }
+        .fl-value-row span { color: var(--fl-muted); font-size: .8rem; }
+        .fl-value-row strong { overflow-wrap: anywhere; font-size: .86rem; }
+        .fl-evidence-list { padding: .35rem 1rem; list-style: none; }
+        .fl-evidence-list li {
+          display: flex;
+          justify-content: space-between;
+          gap: var(--fl-space-4);
+          padding: .72rem 0;
+        }
+        .fl-evidence-list li + li { border-top: 1px solid hsl(140 10% 91%); }
+        .fl-evidence-list li strong { font-size: .86rem; }
+        .fl-evidence-list li span { color: var(--fl-muted); font-size: .78rem; text-align: right; }
+
+        .fl-evidence-quote {
+          margin: .65rem 0 1rem;
+          padding: 1rem 1.1rem;
+          border-left: 4px solid var(--fl-lilac);
+          border-radius: .2rem 1rem 1rem .2rem;
+          background: var(--fl-lilac-soft);
+        }
+        .fl-evidence-quote figcaption {
+          margin-bottom: .55rem;
+          color: #685888;
+          font-size: .7rem;
+          font-weight: 700;
+          letter-spacing: .08em;
+          text-transform: uppercase;
+        }
+        .fl-evidence-quote blockquote {
+          margin: 0;
+          color: #443a55;
+          font-size: .94rem;
+          line-height: 1.6;
+        }
+        .st-key-review_decision_panel {
+          position: sticky;
+          top: 1rem;
+          padding: 1.25rem;
+          border-radius: 1.25rem;
+          background: rgba(255,255,255,.82);
+          box-shadow: var(--fl-shadow-raised), inset 0 0 0 1px hsl(140 10% 88% / .74);
+        }
 
         [data-testid="stFileUploaderDropzone"] {
           min-height: 11rem;
@@ -224,6 +382,11 @@ def inject_global_styles() -> None:
           color: #fff;
           border-color: var(--fl-emerald);
           background: var(--fl-emerald);
+        }
+        .stButton > button[kind="primary"] p,
+        [data-testid="stBaseButton-primary"] p,
+        [data-testid="stFormSubmitButton"] button[kind="primary"] p {
+          color: #fff !important;
         }
         .stButton > button[kind="primary"]:hover, [data-testid="stFormSubmitButton"] button[kind="primary"]:hover {
           color: #fff;
@@ -253,12 +416,59 @@ def inject_global_styles() -> None:
         [data-testid="stMetricLabel"] { color: var(--fl-muted); }
         hr { border-color: var(--fl-line); }
 
+        button:focus-visible,
+        input:focus-visible,
+        textarea:focus-visible,
+        select:focus-visible,
+        [tabindex]:focus-visible {
+          outline: 3px solid hsl(261 58% 52% / .42) !important;
+          outline-offset: 2px !important;
+        }
+
+        @media (max-width: 960px) {
+          .st-key-review_decision_panel { position: static; }
+          .fl-review-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        }
+
         @media (max-width: 720px) {
-          .block-container { padding: 1rem .9rem 4rem; }
-          .fl-topbar { align-items: flex-start; }
+          .block-container { padding: 3.65rem .9rem 4rem; }
+          .fl-topbar { align-items: center; margin-bottom: 1rem; }
+          .fl-session-chip { margin-right: 2.65rem; }
           .fl-brand-note { display: none; }
-          .fl-hero { border-radius: 1.2rem; }
+          .fl-hero { padding: 1.45rem; border-radius: 1.2rem; }
+          .fl-hero h1 { font-size: 2.2rem !important; }
           .fl-section-head { display: block; }
+          .fl-section-copy { max-width: 100%; }
+          div[role="radiogroup"][aria-label="Workflow"] {
+            display: flex;
+            overflow-x: auto;
+            scroll-snap-type: x proximity;
+          }
+          div[role="radiogroup"][aria-label="Workflow"] label {
+            min-width: 8.3rem;
+            scroll-snap-align: start;
+          }
+          .fl-review-stats { gap: .6rem; }
+          .fl-review-stat { min-height: 5.45rem; padding: .85rem; }
+          .fl-review-stat strong { font-size: 1.4rem; }
+          .fl-value-row { grid-template-columns: 1fr; gap: .25rem; }
+          .fl-evidence-list li { display: block; }
+          .fl-evidence-list li span { display: block; margin-top: .25rem; text-align: left; }
+          .st-key-review_decision_panel { padding: 1rem; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+          *, *::before, *::after {
+            scroll-behavior: auto !important;
+            transition-duration: .01ms !important;
+            animation-duration: .01ms !important;
+            animation-iteration-count: 1 !important;
+          }
+          .stButton > button:hover,
+          .stDownloadButton > button:hover,
+          [data-testid="stFormSubmitButton"] button:hover {
+            transform: none;
+          }
         }
         </style>
         """,
@@ -268,7 +478,7 @@ def inject_global_styles() -> None:
 
 def render_topbar(*, api_key_present: bool) -> None:
     """Render the brand header and a non-sensitive session status."""
-    status = "AI session ready" if api_key_present else "Local session only"
+    status = "API key added" if api_key_present else "Local session only"
     st.markdown(
         f"""
         <div class="fl-topbar">
@@ -317,19 +527,23 @@ def section_header(kicker: str, title: str, description: str) -> None:
     )
 
 
-def badge(label: str, tone: str = "neutral") -> str:
+def badge(label: str, tone: str = "neutral", *, dot: bool = False) -> str:
     """Return escaped badge markup for trusted, application-owned labels."""
     supported_tones = {"green", "amber", "red", "neutral", "lilac"}
     selected_tone = tone if tone in supported_tones else "neutral"
     tone_class = "" if selected_tone == "lilac" else f" fl-badge--{selected_tone}"
-    return f'<span class="fl-badge{tone_class}">{escape(label)}</span>'
+    dot_markup = '<i class="fl-badge__dot" aria-hidden="true"></i>' if dot else ""
+    return f'<span class="fl-badge{tone_class}">{dot_markup}{escape(label)}</span>'
 
 
 def callout(message: str, tone: str = "info") -> None:
     """Render an escaped contextual notice."""
     class_suffix = "" if tone == "info" else f" fl-callout--{tone}"
+    accessibility_attributes = (
+        'role="alert" aria-live="assertive"' if tone == "danger" else 'role="note"'
+    )
     st.markdown(
-        f'<div class="fl-callout{class_suffix}">{escape(message)}</div>',
+        f'<div class="fl-callout{class_suffix}" {accessibility_attributes}>{escape(message)}</div>',
         unsafe_allow_html=True,
     )
 

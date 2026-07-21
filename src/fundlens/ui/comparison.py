@@ -72,6 +72,7 @@ def _format_cell(cell: ComparisonCell, field_name: str) -> str:
         rendered_value = f"{rendered_value}\nIssuer label: {cell.original_terminology}"
 
     review_label = {
+        ReviewStatus.AUTO_APPROVED: "Auto-approved",
         ReviewStatus.APPROVED: "Approved",
         ReviewStatus.CORRECTED: "Corrected",
         ReviewStatus.REJECTED: "Rejected",
@@ -123,6 +124,7 @@ def _review_coverage(comparison: ComparisonResult) -> tuple[int, int]:
         for cell in row.cells:
             total += 1
             if cell.status is FieldStatus.DISCLOSED and cell.review_status in {
+                ReviewStatus.AUTO_APPROVED,
                 ReviewStatus.APPROVED,
                 ReviewStatus.CORRECTED,
             }:
@@ -180,6 +182,7 @@ def render_comparison(comparison: ComparisonResult | None) -> None:
         },
     )
     st.caption(
-        "Bracketed labels show human-review state. Rejected, unresolved, and pending facts are "
-        "not treated as accepted evidence in the generated brief."
+        "Bracketed labels show review provenance, including automatic approval. Rejected, "
+        "unresolved, and pending facts are not treated as accepted evidence in the generated "
+        "brief."
     )
