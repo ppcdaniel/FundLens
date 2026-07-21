@@ -188,8 +188,14 @@ def _extract_factsheets(
     )
 
     extracted_factsheets: list[FundFactsheet] = []
-    with st.status("Reading factsheets and locating evidence…", expanded=True) as status:
+    with st.status("Preparing factsheets for evidence extraction…", expanded=True) as status:
         for index, document in enumerate(documents, start=1):
+            status.update(
+                label=(
+                    f"Extracting factsheet {index}/{len(documents)} · "
+                    "each AI request has a fixed deadline…"
+                )
+            )
             st.write(f"Document {index}/{len(documents)} · {document.filename}")
             try:
                 factsheet = extractor.extract_pdf(

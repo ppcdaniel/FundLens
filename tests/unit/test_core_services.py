@@ -30,7 +30,12 @@ from fundlens.services.comparison import ComparisonService, ComparisonWarningCod
 from fundlens.services.evidence_checker import EvidenceChecker
 from fundlens.services.export_service import ExportError, ExportService
 from fundlens.services.fund_extractor import FundExtractionError, FundExtractor
-from fundlens.services.gemma_client import GEMMA_MODEL_NAME, GemmaClient, GemmaClientError
+from fundlens.services.gemma_client import (
+    GEMMA_MODEL_NAME,
+    GEMMA_REQUEST_TIMEOUT_MILLISECONDS,
+    GemmaClient,
+    GemmaClientError,
+)
 from fundlens.services.pdf_parser import (
     DocumentLimitError,
     InvalidPdfError,
@@ -436,6 +441,37 @@ def test_gemma_client_uses_prompt_constrained_json_for_gemma_compatibility() -> 
     assert set(sdk_client.models.request) == {"model", "contents"}
 
 
+def test_gemma_client_configures_a_finite_sdk_request_timeout(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    from google import genai
+    from google.genai import types
+
+    recorded_client_arguments: dict[str, object] = {}
+
+    class RecordingSdkClient:
+        pass
+
+    def create_recording_client(**kwargs: object) -> RecordingSdkClient:
+        recorded_client_arguments.update(kwargs)
+        return RecordingSdkClient()
+
+    monkeypatch.setattr(genai, "Client", create_recording_client)
+
+    GemmaClient("dummy-secret-key")
+
+    assert set(recorded_client_arguments) == {"api_key", "http_options"}
+    assert recorded_client_arguments["api_key"] == "dummy-secret-key"
+    http_options = recorded_client_arguments["http_options"]
+    assert isinstance(http_options, types.HttpOptions)
+    assert http_options.timeout == GEMMA_REQUEST_TIMEOUT_MILLISECONDS
+
+
+def test_gemma_client_rejects_a_non_positive_request_timeout() -> None:
+    with pytest.raises(ValueError, match="must be greater than zero"):
+        GemmaClient("dummy-secret-key", request_timeout_milliseconds=0)
+
+
 def test_gemma_client_rejects_an_empty_response_schema() -> None:
     class UnusedSdkClient:
         models = object()
@@ -487,6 +523,49 @@ def test_gemma_client_maps_google_invalid_key_reason_without_leaking_details() -
     client = GemmaClient("dummy-secret-key", sdk_client=FailingSdkClient())
 
     with pytest.raises(GemmaClientError, match="API key was rejected") as error:
+        client.generate_json(prompt="Return JSON", response_schema={"type": "object"})
+
+    assert "must-not-surface" not in str(error.value)
+
+
+def test_gemma_client_maps_region_precondition_without_leaking_details() -> None:
+    class RegionPreconditionError(RuntimeError):
+        code = 400
+        status = "FAILED_PRECONDITION"
+        details: ClassVar[dict[str, object]] = {
+            "message": "Free tier is not available in this country.",
+            "private_metadata": "must-not-surface",
+        }
+
+    class FailingModels:
+        def generate_content(self, **kwargs: object) -> object:
+            raise RegionPreconditionError("must-not-surface")
+
+    class FailingSdkClient:
+        models = FailingModels()
+
+    client = GemmaClient("dummy-secret-key", sdk_client=FailingSdkClient())
+
+    with pytest.raises(GemmaClientError, match="Enable billing") as error:
+        client.generate_json(prompt="Return JSON", response_schema={"type": "object"})
+
+    assert "must-not-surface" not in str(error.value)
+
+
+def test_gemma_client_maps_timeout_without_leaking_details() -> None:
+    class RequestTimeoutError(RuntimeError):
+        pass
+
+    class FailingModels:
+        def generate_content(self, **kwargs: object) -> object:
+            raise RequestTimeoutError("read timed out: must-not-surface")
+
+    class FailingSdkClient:
+        models = FailingModels()
+
+    client = GemmaClient("dummy-secret-key", sdk_client=FailingSdkClient())
+
+    with pytest.raises(GemmaClientError, match="request timed out") as error:
         client.generate_json(prompt="Return JSON", response_schema={"type": "object"})
 
     assert "must-not-surface" not in str(error.value)

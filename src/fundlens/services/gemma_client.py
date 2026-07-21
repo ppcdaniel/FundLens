@@ -8,6 +8,7 @@ from typing import Any, Protocol, runtime_checkable
 from fundlens.config import MODEL_ID
 
 GEMMA_MODEL_NAME = MODEL_ID
+GEMMA_REQUEST_TIMEOUT_MILLISECONDS = 90_000
 AUTHENTICATION_STATUS_CODES = frozenset({401, 403})
 TRANSIENT_SERVER_STATUS_CODE_MINIMUM = 500
 INVALID_API_KEY_SIGNALS = (
@@ -21,6 +22,20 @@ INVALID_API_KEY_SIGNALS = (
     "invalid api key",
 )
 QUOTA_SIGNALS = ("resource_exhausted", "rate_limit_exceeded", "quota exceeded")
+REGION_OR_BILLING_SIGNALS = (
+    "failed_precondition",
+    "free tier is not available",
+    "location is not supported",
+    "country is not supported",
+    "user location is not supported",
+)
+TIMEOUT_SIGNALS = (
+    "connect timeout",
+    "deadline exceeded",
+    "read timeout",
+    "timed out",
+    "timeout",
+)
 MODEL_UNAVAILABLE_SIGNALS = (
     "model not found",
     "model is not found",
@@ -58,23 +73,39 @@ class GemmaClient:
         api_key: str,
         *,
         sdk_client: Any | None = None,
+        request_timeout_milliseconds: int = GEMMA_REQUEST_TIMEOUT_MILLISECONDS,
     ) -> None:
         if not api_key or not api_key.strip():
             raise ValueError("A Google AI Studio API key is required.")
+        if request_timeout_milliseconds <= 0:
+            raise ValueError("request_timeout_milliseconds must be greater than zero.")
         self._sdk_client = (
-            sdk_client if sdk_client is not None else self._create_sdk_client(api_key)
+            sdk_client
+            if sdk_client is not None
+            else self._create_sdk_client(
+                api_key,
+                request_timeout_milliseconds=request_timeout_milliseconds,
+            )
         )
 
     @staticmethod
-    def _create_sdk_client(api_key: str) -> Any:
-        """Create an SDK client without retaining a second copy of the API key."""
+    def _create_sdk_client(
+        api_key: str,
+        *,
+        request_timeout_milliseconds: int,
+    ) -> Any:
+        """Create a deadline-bounded SDK client without retaining another key copy."""
 
         try:
             from google import genai
+            from google.genai import types
         except ImportError as error:
             raise GemmaClientError("The Google Gen AI SDK is not installed.") from error
         try:
-            return genai.Client(api_key=api_key)
+            return genai.Client(
+                api_key=api_key,
+                http_options=types.HttpOptions(timeout=request_timeout_milliseconds),
+            )
         except Exception:
             raise GemmaClientError("The Google Gen AI client could not be initialized.") from None
 
@@ -130,9 +161,18 @@ class GemmaClient:
             return GemmaClientError(
                 "The Gemma quota is temporarily exhausted. Wait briefly, then try again."
             )
+        if any(signal in error_signal for signal in REGION_OR_BILLING_SIGNALS):
+            return GemmaClientError(
+                "Gemma access is unavailable for this API project or region. "
+                "Enable billing in Google AI Studio or use an eligible region."
+            )
         if any(signal in error_signal for signal in MODEL_UNAVAILABLE_SIGNALS):
             return GemmaClientError(
                 "The selected Gemma model is unavailable for this API project or region."
+            )
+        if any(signal in error_signal for signal in TIMEOUT_SIGNALS):
+            return GemmaClientError(
+                "The Gemma request timed out. Retry with fewer or shorter factsheets."
             )
 
         raw_status_code = getattr(error, "code", None)
