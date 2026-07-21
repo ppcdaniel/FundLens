@@ -10,13 +10,18 @@ from pathlib import Path
 from pydantic import ValidationError
 
 from fundlens.models.evidence import FieldStatus, ReviewStatus
+from fundlens.models.extraction import (
+    EXTRACTION_FIELD_DEFINITIONS,
+    FactsheetExtractionResponse,
+)
 from fundlens.models.fund import FundFactsheet
 from fundlens.services.gemma_client import LanguageModelClient
 from fundlens.services.pdf_parser import DocumentParser, ParsedDocument
 
-PROMPT_PATH = Path(__file__).resolve().parents[1] / "prompts" / "extraction_v1.md"
+PROMPT_PATH = Path(__file__).resolve().parents[1] / "prompts" / "extraction_v2.md"
 MAXIMUM_REPAIR_RESPONSE_CHARACTERS = 24_000
 MAXIMUM_VALIDATION_MESSAGE_CHARACTERS = 2_000
+MAXIMUM_VALIDATION_ISSUES = 20
 
 
 class FundExtractionError(RuntimeError):
@@ -61,7 +66,7 @@ class FundExtractor:
         """Extract and verify one already-parsed factsheet."""
 
         prompt = self._build_extraction_prompt(parsed_document)
-        response_schema = FundFactsheet.model_json_schema()
+        response_schema = FactsheetExtractionResponse.model_json_schema()
         initial_response = self._model_client.generate_json(
             prompt=prompt,
             response_schema=response_schema,
@@ -95,13 +100,11 @@ class FundExtractor:
             for page in parsed_document.pages
         )
         replacements = {
-            "{{SOURCE_DOCUMENT}}": parsed_document.source_document,
             "{{FILE_NAME}}": parsed_document.file_name,
             "{{PAGE_COUNT}}": str(parsed_document.page_count),
-            "{{JSON_SCHEMA}}": json.dumps(
-                FundFactsheet.model_json_schema(),
-                ensure_ascii=False,
-                separators=(",", ":"),
+            "{{FIELD_DEFINITIONS}}": "\n".join(
+                f"- `{field_name}`: {value_type}"
+                for field_name, value_type in EXTRACTION_FIELD_DEFINITIONS
             ),
             "{{DOCUMENT_TEXT}}": page_text,
         }
@@ -120,19 +123,42 @@ class FundExtractor:
         """Constrain the only repair to formatting and citation corrections."""
 
         bounded_response = invalid_response[:MAXIMUM_REPAIR_RESPONSE_CHARACTERS]
-        bounded_validation_error = str(validation_error)[:MAXIMUM_VALIDATION_MESSAGE_CHARACTERS]
+        bounded_validation_error = FundExtractor._safe_validation_summary(validation_error)[
+            :MAXIMUM_VALIDATION_MESSAGE_CHARACTERS
+        ]
         return (
             f"{original_prompt}\n\n"
             "<repair_instruction>\n"
             "This is the only repair attempt. Return the complete JSON object again. "
             "Correct only schema violations or evidence references. Do not introduce, infer, "
-            "or estimate facts absent from the supplied pages. Use not_disclosed with a null "
-            "value when evidence is absent. All review_status values must remain pending.\n"
+            "or estimate facts absent from the supplied pages. For absent evidence, use status "
+            "not_disclosed with null v, p, and q plus c set to zero.\n"
             f"Validation problem: {bounded_validation_error}\n"
             "Invalid response:\n"
             f"{bounded_response}\n"
             "</repair_instruction>"
         )
+
+    @staticmethod
+    def _safe_validation_summary(validation_error: Exception) -> str:
+        """Describe response defects without copying invalid field values."""
+
+        if isinstance(validation_error, ValidationError):
+            issues = validation_error.errors(
+                include_url=False,
+                include_context=False,
+                include_input=False,
+            )
+            summaries: list[str] = []
+            for issue in issues[:MAXIMUM_VALIDATION_ISSUES]:
+                location = ".".join(str(part) for part in issue.get("loc", ())) or "response"
+                summaries.append(f"{location}: {issue.get('type', 'validation_error')}")
+            return "; ".join(summaries)
+        if isinstance(validation_error, json.JSONDecodeError):
+            return f"invalid_json: line {validation_error.lineno}, column {validation_error.colno}"
+        if isinstance(validation_error, EvidenceValidationError):
+            return str(validation_error)
+        return type(validation_error).__name__
 
     def _parse_and_validate(
         self,
@@ -141,7 +167,13 @@ class FundExtractor:
     ) -> FundFactsheet:
         """Apply strict Pydantic and source-page evidence validation."""
 
-        factsheet = FundFactsheet.model_validate_json(response_text, strict=True)
+        extraction_response = FactsheetExtractionResponse.model_validate_json(
+            response_text,
+            strict=True,
+        )
+        factsheet = extraction_response.to_fund_factsheet(
+            source_document=parsed_document.source_document
+        )
         self._validate_evidence(factsheet, parsed_document)
         return factsheet
 
