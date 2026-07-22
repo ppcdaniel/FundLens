@@ -44,11 +44,13 @@ from fundlens.services.gemma_client import (
     GemmaClientError,
 )
 from fundlens.services.pdf_parser import (
+    BoundingBox,
     DocumentLimitError,
     InvalidPdfError,
     ParsedDocument,
     ParsedPage,
     PyMuPDFDocumentParser,
+    TextBlock,
 )
 
 
@@ -177,7 +179,12 @@ def _parsed_document(source_document: str) -> ParsedDocument:
             ParsedPage(
                 page_number=1,
                 text="Fund facts supported here.",
-                blocks=(),
+                blocks=(
+                    TextBlock(
+                        text="Fund facts supported here.",
+                        bounding_box=BoundingBox(x0=10, y0=10, x1=180, y1=20),
+                    ),
+                ),
             ),
         ),
     )
@@ -290,6 +297,87 @@ def test_extractor_rejects_nonexistent_evidence_page_after_repair() -> None:
         extractor.extract_document(parsed_document)
 
     assert len(model_client.prompts) == 2
+
+
+def test_extractor_accepts_exact_evidence_from_one_visual_table_column() -> None:
+    source_document = "e" * 64
+    extracted_factsheet = _factsheet(source_document)
+    response_payload = json.loads(_extraction_response(extracted_factsheet))
+    response_payload["top_holdings"]["q"] = "NVIDIA Corp. 6.4% Apple Inc. 5.9% Microsoft Corp. 3.8%"
+    response_payload["top_holdings"]["v"] = [
+        {"name": "NVIDIA Corp.", "weight_percent": 6.4},
+        {"name": "Apple Inc.", "weight_percent": 5.9},
+        {"name": "Microsoft Corp.", "weight_percent": 3.8},
+    ]
+    model_client = _FakeModelClient(json.dumps(response_payload))
+    parsed_document = ParsedDocument(
+        file_name="two-column-factsheet.pdf",
+        source_document=source_document,
+        mime_type="application/pdf",
+        file_size_bytes=100,
+        pages=(
+            ParsedPage(
+                page_number=1,
+                text=(
+                    "Expense ratio comparison\n"
+                    "Ten largest holdings\n"
+                    "0.97%\n"
+                    "NVIDIA Corp.\n6.4 %\n"
+                    "Apple Inc.\n5.9 %\n"
+                    "0.46%\n"
+                    "Microsoft Corp.\n3.8 %\n"
+                    "Fund facts supported here."
+                ),
+                blocks=(
+                    TextBlock(
+                        text="Expense ratio comparison",
+                        bounding_box=BoundingBox(x0=36, y0=99, x1=140, y1=109),
+                    ),
+                    TextBlock(
+                        text="Ten largest holdings",
+                        bounding_box=BoundingBox(x0=324, y0=102, x1=491, y1=113),
+                    ),
+                    TextBlock(
+                        text="0.97%",
+                        bounding_box=BoundingBox(x0=72, y0=111, x1=110, y1=121),
+                    ),
+                    TextBlock(
+                        text="NVIDIA Corp.\n6.4 %",
+                        bounding_box=BoundingBox(x0=324, y0=117, x1=576, y1=126),
+                    ),
+                    TextBlock(
+                        text="Apple Inc.\n5.9 %",
+                        bounding_box=BoundingBox(x0=324, y0=128, x1=576, y1=137),
+                    ),
+                    TextBlock(
+                        text="0.46%",
+                        bounding_box=BoundingBox(x0=134, y0=138, x1=173, y1=148),
+                    ),
+                    TextBlock(
+                        text="Microsoft Corp.\n3.8 %",
+                        bounding_box=BoundingBox(x0=324, y0=149, x1=576, y1=158),
+                    ),
+                    TextBlock(
+                        text="Fund facts supported here.",
+                        bounding_box=BoundingBox(x0=36, y0=500, x1=180, y1=510),
+                    ),
+                ),
+            ),
+        ),
+    )
+    extractor = FundExtractor(
+        model_client=model_client,
+        document_parser=_FakeDocumentParser(parsed_document),
+    )
+
+    result = extractor.extract_document(parsed_document)
+
+    assert [holding.name for holding in result.top_holdings.value or ()] == [
+        "NVIDIA Corp.",
+        "Apple Inc.",
+        "Microsoft Corp.",
+    ]
+    assert len(model_client.prompts) == 1
 
 
 def test_extractor_surfaces_json_failure_category_without_invalid_content() -> None:

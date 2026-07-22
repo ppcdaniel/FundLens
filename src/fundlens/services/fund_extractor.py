@@ -3,8 +3,6 @@
 from __future__ import annotations
 
 import json
-import re
-import unicodedata
 from pathlib import Path
 
 from pydantic import ValidationError
@@ -15,6 +13,7 @@ from fundlens.models.extraction import (
     FactsheetExtractionResponse,
 )
 from fundlens.models.fund import FundFactsheet
+from fundlens.services.evidence_matching import PageEvidenceMatcher
 from fundlens.services.gemma_client import LanguageModelClient
 from fundlens.services.pdf_parser import DocumentParser, ParsedDocument
 from fundlens.services.review_policy import apply_automatic_approvals
@@ -190,8 +189,9 @@ class FundExtractor:
         factsheet: FundFactsheet,
         parsed_document: ParsedDocument,
     ) -> None:
-        """Verify all evidence references in O(fields + quoted-text length) time."""
+        """Verify evidence with one cached spatial text index per cited page."""
 
+        page_matchers: dict[int, PageEvidenceMatcher] = {}
         for field_name, evidence_field in factsheet.iter_evidence_fields():
             if evidence_field.source_document != parsed_document.source_document:
                 raise EvidenceValidationError(
@@ -217,19 +217,13 @@ class FundExtractor:
                 raise EvidenceValidationError(
                     f"Field {field_name} references nonexistent page {evidence_field.page_number}."
                 )
-            source_page = parsed_document.page(evidence_field.page_number)
-            normalized_page_text = _normalize_evidence_text(source_page.text)
-            normalized_supporting_text = _normalize_evidence_text(
-                evidence_field.supporting_text or ""
-            )
-            if normalized_supporting_text not in normalized_page_text:
+            page_matcher = page_matchers.get(evidence_field.page_number)
+            if page_matcher is None:
+                page_matcher = PageEvidenceMatcher.from_page(
+                    parsed_document.page(evidence_field.page_number)
+                )
+                page_matchers[evidence_field.page_number] = page_matcher
+            if not page_matcher.supports(evidence_field.supporting_text or ""):
                 raise EvidenceValidationError(
                     f"Field {field_name} supporting text is not present on its cited page."
                 )
-
-
-def _normalize_evidence_text(text: str) -> str:
-    """Normalize harmless PDF whitespace and Unicode differences before exact matching."""
-
-    unicode_normalized_text = unicodedata.normalize("NFKC", text)
-    return re.sub(r"\s+", " ", unicode_normalized_text).strip().casefold()
