@@ -11,6 +11,9 @@ Safety and grounding rules:
 - Historical figures may come only from the calculated-metrics catalog. Copy them;
   never calculate, derive, annualize, compare periods, or alter precision. Cite every
   metric bullet using `[METRIC:<identifier>]`.
+- Treat every catalog identifier as an opaque string and copy it character-for-character.
+  Never shorten or remove a prefix. For example, the catalog key `metric:1:cagr` must
+  be cited as `[METRIC:metric:1:cagr]`.
 - Map client requirements to observable trade-offs and due-diligence questions.
 - Label interpretations explicitly with the word `Interpretation` and cite their
   underlying evidence or metric.
@@ -18,8 +21,9 @@ Safety and grounding rules:
 - Do not turn missing information into a fact. Surface it under missing information.
 - Use at most two compact bullets per section, except `funds_considered`, which may use
   three. Keep the total content within 2,400 characters and each bullet within 240
-  characters. Do not emit Markdown headings; the application renders the required
-  headings and disclaimer deterministically.
+  characters, including citations. Shorten prose rather than any citation identifier.
+  Do not emit Markdown headings; the application renders the required headings and
+  disclaimer deterministically.
 
 Client requirements:
 {{CLIENT_REQUIREMENTS}}

@@ -492,6 +492,64 @@ def test_brief_generator_uses_reviewed_evidence_and_fixed_sections() -> None:
     assert set(brief.evidence_identifiers) == {first_name_id, second_name_id}
 
 
+def test_brief_repair_preserves_metric_prefixes_and_restates_content_limits() -> None:
+    first_fund = _factsheet("a" * 64, review_status=ReviewStatus.APPROVED)
+    second_fund = _factsheet(
+        "b" * 64,
+        name="Fund B",
+        review_status=ReviewStatus.APPROVED,
+    )
+    first_name_id = f"{'a' * 12}:fund_name"
+    second_name_id = f"{'b' * 12}:fund_name"
+    invalid_content = BriefContent(
+        client_requirements=("The client seeks broad equity exposure.",),
+        funds_considered=(
+            f"Fund A [EVIDENCE:{first_name_id}]",
+            f"Fund B [EVIDENCE:{second_name_id}]",
+        ),
+        key_factual_comparison=(),
+        historical_risk_and_return_metrics=("CAGR [METRIC:1:cagr]",),
+        material_trade_offs=(),
+        disclosed_risks=(),
+        missing_information=(),
+        further_due_diligence_questions=("Confirm tax treatment.",),
+        sources_and_reporting_dates=(),
+        calculation_methodology=(),
+    )
+    repaired_content = invalid_content.model_copy(
+        update={"historical_risk_and_return_metrics": ("CAGR [METRIC:metric:1:cagr]",)}
+    )
+    model_client = _FakeModelClient(
+        invalid_content.model_dump_json(),
+        repaired_content.model_dump_json(),
+    )
+    requirements = ClientRequirements(
+        investment_objective="Broad equity exposure",
+        time_horizon="10 years",
+        risk_tolerance="Moderate",
+        liquidity_needs="Daily",
+        income_preference="Flexible",
+        currency_preference="USD",
+        geographic_constraints="None",
+        existing_concentration_concerns="Technology",
+        additional_requirements="",
+    )
+
+    brief = BriefGenerator(model_client=model_client).generate(
+        client_requirements=requirements,
+        funds=(first_fund, second_fund),
+        tone=BriefTone.INTERNAL_ANALYST_NOTE,
+        calculated_metrics={"metric:1:cagr": {"value": 0.1}},
+    )
+
+    assert brief.metric_identifiers == ("metric:1:cagr",)
+    assert "[METRIC:metric:1:cagr]" in model_client.prompts[0]
+    assert "at or below 240 characters" in model_client.prompts[1]
+    assert "at or below 2400 characters" in model_client.prompts[1]
+    assert "funds_considered" in model_client.prompts[1]
+    assert "Preserve at least one supplied evidence or metric citation" in model_client.prompts[1]
+
+
 def test_unsupported_claim_is_excluded_until_explicitly_approved() -> None:
     response = json.dumps(
         {

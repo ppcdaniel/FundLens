@@ -313,14 +313,15 @@ def render_brief_workspace(
     elif client_requirements is None:
         callout("Save the client decision context before generating a brief.", "warning")
 
-    if st.button(
+    generate_requested = st.button(
         "Generate comparison brief",
         type="primary",
         disabled=not prerequisites_met,
         width="stretch",
         key="fundlens.generate_brief",
-    ):
-        assert client_requirements is not None
+    )
+    # Streamlit can retain a transient button event across a hot rerun after upstream state resets.
+    if generate_requested and prerequisites_met and client_requirements is not None:
         with st.spinner("Drafting only from reviewed evidence and calculated metrics…"):
             try:
                 generated_brief = generate_brief(client_requirements, tone)

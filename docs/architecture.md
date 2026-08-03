@@ -10,7 +10,7 @@ Browser / Streamlit session
   ├── ComparisonService
   ├── FinancialAnalyticsService (pure calculations)
   ├── BriefGenerator → injected Gemma client
-  ├── EvidenceChecker
+  ├── EvidenceChecker → injected Gemma client
   └── ExportService
 ```
 
@@ -27,7 +27,10 @@ PDF bytes are validated before parsing. Each parse uses a uniquely isolated temp
 
 ## Evidence precedence
 
-For downstream comparison and generation: `corrected` → `approved` → other extracted values. Rejected and unresolved facts are not represented as established facts. Every supported generated claim cites an evidence identifier or deterministic metric identifier.
+For downstream comparison and generation, only `auto_approved`, `approved`, and
+`corrected` disclosed values are accepted. Pending, rejected, unresolved, and
+non-disclosed fields are not represented as established facts. Every supported generated
+claim cites an accepted evidence identifier or deterministic metric identifier.
 
 ## Failure behavior
 

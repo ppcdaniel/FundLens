@@ -11,7 +11,8 @@ A user supplies two or three factsheets, reviews page-cited normalized fields, o
 ## Product principles
 
 - Never infer an undisclosed fact.
-- A reviewer-approved or reviewer-corrected value wins downstream.
+- Only auto-approved, manually approved, or reviewer-corrected disclosed values are
+  accepted downstream; every state remains visible and reversible.
 - Calculations are deterministic and never delegated to a language model.
 - Unsupported claims are visible and excluded from export by default.
 - Key and document handling are session-scoped and ephemeral.
@@ -27,5 +28,4 @@ Accounts, authentication, persistent storage, live prices, broker connections, p
 
 ## Definition of done
 
-A new user can complete the entire workflow with two included synthetic factsheets and price files, understand each evidence and calculation source, export only reviewed material, and clear the key/session state.
-
+A new user can complete the entire workflow with two included synthetic factsheets and price files, understand each evidence and calculation source, export only accepted and evidence-checked material, and clear the key/session state.

@@ -75,6 +75,30 @@ def test_matcher_reconstructs_one_column_without_neighboring_chart_text() -> Non
     assert matcher.supports("NVIDIA Corp. 6.4% Apple Inc. 5.9% Microsoft Corp. 3.8%")
 
 
+def test_matcher_accepts_contiguous_section_across_heading_alignment_change() -> None:
+    page = _page(
+        _block(
+            "Disclosed risks",
+            x0=216.0,
+            y0=89.0,
+            width=162.0,
+            height=30.0,
+        ),
+        _block(
+            "- Market risk\n- Currency risk\n- Tracking difference risk",
+            x0=57.0,
+            y0=118.0,
+            width=110.0,
+            height=38.0,
+        ),
+        _block("Important information", x0=57.0, y0=194.0),
+    )
+
+    assert PageEvidenceMatcher.from_page(page).supports(
+        "Disclosed risks\n- Market risk\n- Currency risk\n- Tracking difference risk"
+    )
+
+
 @pytest.mark.parametrize(
     "unsupported_quote",
     (

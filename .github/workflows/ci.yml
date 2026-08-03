@@ -25,6 +25,39 @@ jobs:
       - run: uv run mypy src app.py
       - run: uv run pytest
 
+  container-smoke-test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Validate Docker Compose configuration
+        run: docker compose config --quiet
+      - name: Build FundLens container
+        run: docker compose build
+      - name: Start FundLens container
+        run: docker compose up --detach
+      - name: Wait for Streamlit health endpoint
+        shell: bash
+        run: |
+          for attempt in {1..60}; do
+            if curl --fail --silent --show-error http://127.0.0.1:8501/_stcore/health; then
+              exit 0
+            fi
+            sleep 2
+          done
+
+          echo "FundLens did not become healthy within 120 seconds."
+          docker compose ps
+          exit 1
+      - name: Print container logs after failure
+        if: failure()
+        run: docker compose logs --no-color
+      - name: Stop FundLens container
+        if: always()
+        run: docker compose down --volumes --remove-orphans
+
   secret-scan:
     runs-on: ubuntu-latest
     steps:

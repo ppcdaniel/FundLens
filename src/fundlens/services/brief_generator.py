@@ -12,6 +12,8 @@ from typing import Any
 from pydantic import BaseModel, ValidationError
 
 from fundlens.models.client_brief import (
+    MAXIMUM_BRIEF_BULLET_CHARACTERS,
+    MAXIMUM_BRIEF_CONTENT_CHARACTERS,
     BriefContent,
     BriefTone,
     ClientRequirements,
@@ -231,7 +233,15 @@ class BriefGenerator:
             "<repair_instruction>\n"
             "This is the only repair attempt. Return the complete JSON object. Correct only "
             "schema, citation, or prohibited-recommendation issues. Do not add evidence, "
-            "calculate metrics, select a best fund, or make a suitability recommendation.\n"
+            "calculate metrics, select a best fund, or make a suitability recommendation. "
+            "Copy every citation identifier character-for-character, including an identifier's "
+            "metric: prefix. For example, catalog key metric:1:cagr must be cited as "
+            "[METRIC:metric:1:cagr]. Preserve at least one supplied evidence or metric citation "
+            "in every non-empty bullet under these keys: "
+            f"{', '.join(FACTUAL_SECTION_NAMES)}. Preserve a supplied metric citation in every "
+            "historical_risk_and_return_metrics bullet. Keep every bullet at or below "
+            f"{MAXIMUM_BRIEF_BULLET_CHARACTERS} characters and all bullets together at or below "
+            f"{MAXIMUM_BRIEF_CONTENT_CHARACTERS} characters; shorten prose, never identifiers.\n"
             f"Validation problem: {str(validation_error)[:2_000]}\n"
             f"Invalid response: {invalid_response[:MAXIMUM_REPAIR_RESPONSE_CHARACTERS]}\n"
             "</repair_instruction>"

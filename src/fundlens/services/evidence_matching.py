@@ -11,6 +11,7 @@ from fundlens.services.pdf_parser import ParsedPage, TextBlock
 
 COLUMN_LEFT_EDGE_TOLERANCE_POINTS = 12.0
 MAXIMUM_COLUMN_VERTICAL_GAP_POINTS = 18.0
+MINIMUM_PARALLEL_BLOCK_VERTICAL_OVERLAP_RATIO = 0.25
 
 _LINE_WRAPPED_HYPHEN_PATTERN = re.compile(r"(?<=\w)-[^\S\r\n]*(?:\r\n|\r|\n)[^\S\r\n]*(?=\w)")
 _PERCENTAGE_SPACING_PATTERN = re.compile(r"(?<=\d)\s+(?=%)")
@@ -104,6 +105,61 @@ def _contiguous_vertical_runs(
     return tuple(runs)
 
 
+def _has_parallel_text_regions(blocks: Sequence[TextBlock]) -> bool:
+    """Return whether substantially overlapping blocks occupy separate columns.
+
+    Time: O(b log b + k), where b is block count and k is vertically overlapping
+    block pairs; k is O(b^2) only for pathologically dense layouts.
+    Space: O(b) for sorted block references.
+    """
+
+    blocks_by_top_edge = sorted(
+        blocks,
+        key=lambda block: (
+            block.bounding_box.y0,
+            block.bounding_box.y1,
+            block.bounding_box.x0,
+            block.bounding_box.x1,
+        ),
+    )
+    for block_index, block in enumerate(blocks_by_top_edge):
+        block_height = block.bounding_box.y1 - block.bounding_box.y0
+        if block_height <= 0:
+            continue
+
+        for candidate_index in range(block_index + 1, len(blocks_by_top_edge)):
+            candidate_block = blocks_by_top_edge[candidate_index]
+            if candidate_block.bounding_box.y0 >= block.bounding_box.y1:
+                break
+
+            horizontally_disjoint = (
+                block.bounding_box.x1 <= candidate_block.bounding_box.x0
+                or candidate_block.bounding_box.x1 <= block.bounding_box.x0
+            )
+            if not horizontally_disjoint:
+                continue
+
+            candidate_height = candidate_block.bounding_box.y1 - candidate_block.bounding_box.y0
+            if candidate_height <= 0:
+                continue
+
+            vertical_overlap = min(
+                block.bounding_box.y1,
+                candidate_block.bounding_box.y1,
+            ) - max(
+                block.bounding_box.y0,
+                candidate_block.bounding_box.y0,
+            )
+            shorter_block_height = min(block_height, candidate_height)
+            if (
+                vertical_overlap / shorter_block_height
+                >= MINIMUM_PARALLEL_BLOCK_VERTICAL_OVERLAP_RATIO
+            ):
+                return True
+
+    return False
+
+
 def _normalized_page_candidates(page: ParsedPage) -> tuple[str, ...]:
     """Build exact block and column-reading-order candidates for one page.
 
@@ -123,6 +179,14 @@ def _normalized_page_candidates(page: ParsedPage) -> tuple[str, ...]:
 
     for block in page.blocks:
         add_candidate(block.text)
+
+    # Cross-alignment runs are safe only when spatial blocks do not reveal parallel
+    # columns. The vertical-gap split still prevents distant page regions from being
+    # stitched into invented evidence.
+    if page.blocks and not _has_parallel_text_regions(page.blocks):
+        for reading_run in _contiguous_vertical_runs(page.blocks):
+            if len(reading_run) >= 2:
+                add_candidate("\n".join(block.text for block in reading_run))
 
     for column_group in _group_blocks_by_left_edge(page.blocks):
         for vertical_run in _contiguous_vertical_runs(column_group):
