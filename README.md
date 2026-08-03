@@ -7,7 +7,7 @@
 
 FundLens turns two or three text-based ETF or fund factsheets into a page-cited, reviewable comparison. It adds optional deterministic historical analytics, then generates and evidence-checks a one-page research brief.
 
-[Open the hosted demo](https://fundlens-research.streamlit.app/) — Streamlit may need a minute to wake after inactivity.
+[Open the hosted demo](https://fundlens-research.streamlit.app/) - Streamlit may need a minute to wake after inactivity.
 
 > FundLens provides research and decision support, not financial advice. It does not recommend a “best” fund or make buy, sell, or suitability conclusions.
 
@@ -29,7 +29,7 @@ FundLens turns two or three text-based ETF or fund factsheets into a page-cited,
 - **Trace every extracted fact.** Each disclosed value retains its source document, page number, supporting issuer text, and model confidence.
 - **Keep review state explicit.** Citation-validated fields above 90% confidence start auto-approved but remain reversible. Pending, rejected, unresolved, and non-disclosed fields are excluded from accepted evidence.
 - **Compare without hiding context.** Deterministic checks surface differences in reporting dates, currencies, income treatment, fee terminology, performance periods, return basis, and value scope.
-- **Separate language from calculation.** Total return, CAGR, annualized volatility, maximum drawdown, downside volatility, and aligned-return correlations are calculated in Python—not by the language model.
+- **Separate language from calculation.** Total return, CAGR, annualized volatility, maximum drawdown, downside volatility, and aligned-return correlations are calculated in Python-not by the language model.
 - **Check before export.** Generated claims are classified as document-supported, calculation-supported, interpretation, unsupported, or conflicting evidence. Unsupported claims are excluded unless explicitly approved.
 
 ## Workflow
@@ -69,7 +69,7 @@ The complete ten-fund corpus and labeled expected extractions are described in [
 | Area | Current behavior |
 |---|---|
 | API key | Streamlit sends the password-field value to the Python server. The application keeps it in that user’s session memory, does not place it in a file or shared cache, and does not include it in exports. **Forget API key** clears FundLens session state and rotates sensitive widgets. |
-| PDF extraction | FundLens validates each PDF, parses it in an isolated temporary directory, deletes the temporary copy on exit, and sends bounded extracted page text—not the raw PDF file—to Google for extraction. |
+| PDF extraction | FundLens validates each PDF, parses it in an isolated temporary directory, deletes the temporary copy on exit, and sends bounded extracted page text-not the raw PDF file-to Google for extraction. |
 | Structured output | Gemma returns prompt-constrained JSON. FundLens then applies strict Pydantic validation, document identity checks, citation-page checks, and supporting-text verification, with at most one constrained repair attempt. |
 | Evidence acceptance | Disclosed fields are accepted downstream only when auto-approved, manually approved, or corrected. Every accepted state remains visible in the UI. |
 | Price analytics | Raw price CSVs are processed locally by deterministic Python. Calculated metrics may be supplied to Gemma as evidence for brief generation and checking; Gemma does not calculate them. |
